@@ -2,6 +2,7 @@
 @plugin "daisyui" {
   themes:
     dark,
+     light ,
   cupcake,
   bumblebee,
   emerald,
@@ -33,4 +34,26 @@
   nord,
   sunset
 
+}
+
+
+@layer utilities {
+  /* For Webkit browsers (Chrome, Edge, Safari) */
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: theme(colors.neutral.500 / 70%);
+    border-radius: 9999px; /* fully rounded */
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    background-color: theme(colors.base.200);
+  }
+
+  /* Firefox */
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: theme(colors.neutral.500 / 70%) theme(colors.base.200);
+  }
 }
