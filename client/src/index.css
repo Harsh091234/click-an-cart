@@ -1,4 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-
+button:hover{
+    cursor: pointer;
+}

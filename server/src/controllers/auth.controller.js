@@ -51,7 +51,14 @@ export const register = async (req, res) => {
 			role: user.role,
 		});
 	} catch (error) {
+		  if (error.name === "ValidationError") {
+			console.log("Error in signup controller", error.message);
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ message: messages[0] }); 
+    }
+
 		console.log("Error in signup controller", error.message);
+
 		res.status(500).json({ message: error.message });
 	}
 };
