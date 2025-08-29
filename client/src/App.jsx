@@ -14,6 +14,7 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
+    
     const timer = setTimeout(() => setDelayDone(true), 1500); 
     return () => clearTimeout(timer);
   }, [checkAuth]);

@@ -2,13 +2,26 @@ import React from "react";
 import { UserPlus, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Navbar = () => {
-  const {logout} = useUserStore();
+  const {logout, googleLogin} = useUserStore();
   const handleLogout = (e) => {
     e.preventDefault();
     logout();
   }
+ const loginWithGoogle = useGoogleLogin({
+    onSuccess: (credentialResponse) => {
+      if (credentialResponse?.access_token) {
+        // Send access_token to your store/backend
+        googleLogin(credentialResponse.access_token);
+      }
+    },
+    onError: () => {
+      console.error("Google Login Failed");
+    },
+  });
+
   return (
     <nav className="bg-gray-900 px-6 py-3 flex justify-between items-center shadow border-b border-b-emerald-800">
       {/* Logo */}
@@ -39,7 +52,18 @@ const Navbar = () => {
           <LogIn className="h-4 w-4" />
           Login
         </Link>
-
+          {/* google login button */}
+          <button
+              onClick={loginWithGoogle}
+              className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg transition"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="h-4 w-4"
+              />
+              Login with Google
+            </button>
         <button onClick={handleLogout}  className=" flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg  transition">
          <LogOut className="h-4 w-4" /> Logout
         </button>

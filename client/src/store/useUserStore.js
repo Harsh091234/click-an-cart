@@ -4,9 +4,32 @@ import axios from "../utils/axios";
 
 export const useUserStore = create((set, get) => ({
   user: null,
+  clientId: null,
   loading: false,
   checkingAuth: true,
 
+  setClientId: async () => {
+    try {
+      const res = await axios.get("/auth/google/client-id");
+      set({ clientId: res.data.clientId });
+    } catch (err) {
+      console.error("Failed to load Google Client ID", err);
+      return toast.error("Failed to load Google Client ID");
+    }
+  },
+  googleLogin: async (access_token) => {
+    set({ loading: true });
+    try {
+      const res = await axios.post("/auth/google", { access_token});
+      set({ user: res.data, loading: false });
+      toast.success("User logged in successfully");
+    } catch (err) {
+    
+      set({ loading: false });
+       console.log("Google login failed:", err);
+      toast.error("Google login failed" || err.res.data.message)
+    }
+  },
   signup: async ({ name, email, password, confirmPassword }) => {
     set({ loading: true });
     if (password !== confirmPassword) {
@@ -45,7 +68,8 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const res = await axios.get("/auth/profile");
-      set({ user: res.data, checkingAuth: false });
+            set({ user: res.data, checkingAuth: false });
+            console.log("auth user: ", user);
     } catch (error) {
       set({ user: null, checkingAuth: false });
       console.error(

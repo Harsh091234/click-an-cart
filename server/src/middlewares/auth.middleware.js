@@ -6,7 +6,7 @@ export async function protectRoute(req, res, next) {
   try {
       const accessToken = req.cookies.accessToken;
       if(!accessToken){
-          return res.status({message: "Uauthorized= No access token provied"})
+          return  res.status(401).json({message: "Uauthorized= No access token provied"})
       }
   
       const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
@@ -20,7 +20,7 @@ export async function protectRoute(req, res, next) {
       next();
   } catch (error) {
     console.error("Error in protect middleware (outer catch):", error.message);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error in protect middleware",
       error: error.message,
     });
