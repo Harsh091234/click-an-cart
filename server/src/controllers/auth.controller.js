@@ -2,7 +2,10 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../utils/redis.js";
 import client from "../utils/googleClient.js";
-import axios from "axios"
+import axios from "axios";
+import { randomInt } from "crypto";
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetSuccessEmail, sendPasswordResetEmail } from "../utils/mailing/email.js";
+
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -43,22 +46,23 @@ export const googleAuth = async (req, res) => {
   const { access_token } = req.body;
   try {
     if (!access_token) {
-      return res.status(400).json({ message: "Google access token is required" });
+      return res
+        .status(400)
+        .json({ message: "Google access token is required" });
     }
 
-    
     const response = await axios.get(
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
     );
 
-    const { email, name} = response.data;
+    const { email, name } = response.data;
 
     let user = await User.findOne({ email });
     if (!user) {
       user = await User.create({
         name,
         email,
-      
+
         authProvider: "google",
       });
     }
@@ -87,17 +91,32 @@ export const register = async (req, res) => {
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
-    const user = await User.create({ name, email, password });
+     const verificationCode = randomInt(0, 1_000_000)
+      .toString()
+      .padStart(6, "0");
+    
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      verificationCode,
+      verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
 
     const { refreshToken, accessToken } = generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, refreshToken, accessToken);
+    
+    await sendVerificationEmail(user.email, verificationCode);
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      isVerified: user.isVerified
+
     });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -111,6 +130,42 @@ export const register = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const user = await User.findOne({
+      verificationCode: code,
+      verificationCodeExpiresAt: { $gt: Date.now() },
+    });
+    console.log(`user: ${user}`);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+    }
+
+    user.isVerified = true;
+    user.verificationCode = undefined;
+    user.verificationCodeExpiresdAt = undefined;
+    await user.save();
+    await sendWelcomeEmail(user.email, user.name);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+   console.error("Error in verifyEmail controller:", error.message);
+     res.status(500).json({
+     
+      message: "Server error while verifying email",
+    
+    });
+  }
+};
+
 
 export const login = async (req, res) => {
   try {
@@ -201,3 +256,64 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ error: "Server error, please try again later." });
   }
 };
+
+export const forgotPassword = async(req, res) => {
+    const {email} = req.body;
+    
+    try {
+        const user = await User.findOne({email});
+        
+        if(!user){
+            return res.status(400).json({success: false, message: "user not found"});
+        }
+
+        const resetPasswordCode = randomInt(0, 1_000_000).toString().padStart(6, "0");
+       
+        const resetPasswordCodeExpiresAt = Date.now() + 1 * 60 * 60 * 1000; //1 hour
+
+        user.resetPasswordCode = resetPasswordCode;
+        user.resetPasswordCodeExpiresAt = resetPasswordCodeExpiresAt;
+
+        await user.save();
+
+        await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`);
+
+        res.status(200).json({success: true, message: "password reset link sent to your email", code: user.resetPasswordCode});
+    } catch (error) {
+        console.log("Error in forgot password: ", error);
+        res.status(400).json({sucess: false, message: error.message});
+    }
+}
+
+export const resetPassword = async(req, res) => {
+    try {
+        const {code} = req.params;
+        const {newPassword, confirmNewPassword} = req.body;
+        if(confirmNewPassword !== newPassword){
+          return res.status(500).json({message: "Passwords do not match."})
+        }
+        const user = await User.findOne({
+            resetPasswordCode: code,
+            resetPasswordCodeExpiresAt: {$gt: Date.now()},
+        })
+       
+
+        if(!user){
+            return res.status(400).json({success: false, message: "invalid or expired reset token"});
+        }
+
+       
+
+        user.password = newPassword;
+        user.resetPasswordCode = undefined;
+        user.resetPasswordCodeExpiresAt = undefined;
+        await user.save();
+
+        await sendPasswordResetSuccessEmail(user.email);
+
+        res.status(200).json({success: true, message: "Password reset successful"});
+    } catch (error) {
+        console.log("error in reset password", error);
+        res.status(400).json({success: false, message: error.message});
+    }
+}

@@ -42,6 +42,14 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google"],
       default: "local", 
     },
+     isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: String,
+    verificationCodeExpiresAt: Date,
+    resetPasswordCode: String,
+    resetPasswordCodeExpiresAt: Date,
   },
   {
     timestamps: true,

@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { register, logout, login, refreshToken, getProfile, googleAuth} from '../controllers/auth.controller.js';
+import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyEmail, forgotPassword, resetPassword} from '../controllers/auth.controller.js';
 import { protectRoute } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
@@ -12,8 +12,11 @@ router.get("/google/client-id", (req, res) => {
 router.post('/register', register);
 router.post('/login', login);
 router.post('/refresh-token',refreshToken);
-router.post('/logout', logout);
+router.post("/verify-email", verifyEmail);
+router.post("/forgot-password", forgotPassword)
+router.post('/logout',protectRoute, logout);
 router.get("/profile", protectRoute, getProfile);
+router.post("/reset-password/:code", resetPassword);
 
 
 
