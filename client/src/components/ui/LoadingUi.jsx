@@ -11,7 +11,7 @@ import { ShoppingCart, Sparkles } from "lucide-react";
  */
 export default function LoadingUi({ message = "Loading" }) {
   return (
-    <div className="min-h-screen w-full bg-gray-950 text-emerald-400 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen w-full  text-emerald-400 flex items-center justify-center p-4 sm:p-6">
       <div
         role="status"
         aria-live="polite"

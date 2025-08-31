@@ -3,8 +3,9 @@ import { UserPlus, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 import { useGoogleLogin } from "@react-oauth/google";
-
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate();
   const {logout, googleLogin} = useUserStore();
   const handleLogout = (e) => {
     e.preventDefault();

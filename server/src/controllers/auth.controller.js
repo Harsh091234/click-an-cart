@@ -4,8 +4,12 @@ import { redis } from "../utils/redis.js";
 import client from "../utils/googleClient.js";
 import axios from "axios";
 import { randomInt } from "crypto";
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetSuccessEmail, sendPasswordResetEmail } from "../utils/mailing/email.js";
-
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+  sendPasswordResetSuccessEmail,
+  sendPasswordResetEmail,
+} from "../utils/mailing/email.js";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -58,11 +62,15 @@ export const googleAuth = async (req, res) => {
     const { email, name } = response.data;
 
     let user = await User.findOne({ email });
+      const verificationCode = randomInt(0, 1_000_000)
+      .toString()
+      .padStart(6, "0");
     if (!user) {
       user = await User.create({
         name,
         email,
-
+         verificationCode,
+      verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         authProvider: "google",
       });
     }
@@ -70,12 +78,14 @@ export const googleAuth = async (req, res) => {
     const { refreshToken, accessToken } = generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, refreshToken, accessToken);
+ await sendVerificationEmail(user.email, verificationCode);
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+       isVerified: user.isVerified,
     });
   } catch (error) {
     console.error("Error in googleAuth:", error.message);
@@ -91,23 +101,23 @@ export const register = async (req, res) => {
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
-     const verificationCode = randomInt(0, 1_000_000)
-      .toString()
-      .padStart(6, "0");
-    
+   const verificationCode = randomInt(0, 1000000)
+  .toString()
+  .padStart(6, "0");
 
     const user = await User.create({
       name,
       email,
       password,
       verificationCode,
+      authProvider: "local",
       verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
     const { refreshToken, accessToken } = generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, refreshToken, accessToken);
-    
+
     await sendVerificationEmail(user.email, verificationCode);
 
     res.status(201).json({
@@ -115,8 +125,7 @@ export const register = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      isVerified: user.isVerified
-
+      isVerified: user.isVerified,
     });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -130,7 +139,6 @@ export const register = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const verifyEmail = async (req, res) => {
   try {
@@ -148,24 +156,23 @@ export const verifyEmail = async (req, res) => {
 
     user.isVerified = true;
     user.verificationCode = undefined;
-    user.verificationCodeExpiresdAt = undefined;
+    user.verificationCodeExpiresAt = undefined;
     await user.save();
     await sendWelcomeEmail(user.email, user.name);
 
     res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: true,
     });
   } catch (error) {
-   console.error("Error in verifyEmail controller:", error.message);
-     res.status(500).json({
-     
+    console.error("Error in verifyEmail controller:", error.message);
+    res.status(500).json({
       message: "Server error while verifying email",
-    
     });
   }
 };
-
 
 export const login = async (req, res) => {
   try {
@@ -203,6 +210,8 @@ export const logout = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET
       );
       await redis.del(`refresh_token: ${decoded.userId}`);
+      
+      await user.save();
     }
 
     res.clearCookie("accessToken");
@@ -257,63 +266,106 @@ export const getProfile = async (req, res) => {
   }
 };
 
-export const forgotPassword = async(req, res) => {
-    const {email} = req.body;
-    
-    try {
-        const user = await User.findOne({email});
-        
-        if(!user){
-            return res.status(400).json({success: false, message: "user not found"});
-        }
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
 
-        const resetPasswordCode = randomInt(0, 1_000_000).toString().padStart(6, "0");
-       
-        const resetPasswordCodeExpiresAt = Date.now() + 1 * 60 * 60 * 1000; //1 hour
+  try {
+    const user = await User.findOne({ email });
 
-        user.resetPasswordCode = resetPasswordCode;
-        user.resetPasswordCodeExpiresAt = resetPasswordCodeExpiresAt;
-
-        await user.save();
-
-        await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`);
-
-        res.status(200).json({success: true, message: "password reset link sent to your email", code: user.resetPasswordCode});
-    } catch (error) {
-        console.log("Error in forgot password: ", error);
-        res.status(400).json({sucess: false, message: error.message});
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user not found" });
     }
-}
 
-export const resetPassword = async(req, res) => {
-    try {
-        const {code} = req.params;
-        const {newPassword, confirmNewPassword} = req.body;
-        if(confirmNewPassword !== newPassword){
-          return res.status(500).json({message: "Passwords do not match."})
-        }
-        const user = await User.findOne({
-            resetPasswordCode: code,
-            resetPasswordCodeExpiresAt: {$gt: Date.now()},
-        })
-       
+    const resetPasswordCode = randomInt(0, 1_000_000)
+      .toString()
+      .padStart(6, "0");
 
-        if(!user){
-            return res.status(400).json({success: false, message: "invalid or expired reset token"});
-        }
+    const resetPasswordCodeExpiresAt = Date.now() + 1 * 60 * 60 * 1000; //1 hour
 
-       
+    user.resetPasswordCode = resetPasswordCode;
+    user.resetPasswordCodeExpiresAt = resetPasswordCodeExpiresAt;
 
-        user.password = newPassword;
-        user.resetPasswordCode = undefined;
-        user.resetPasswordCodeExpiresAt = undefined;
-        await user.save();
+    await user.save();
 
-        await sendPasswordResetSuccessEmail(user.email);
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`
+    );
 
-        res.status(200).json({success: true, message: "Password reset successful"});
-    } catch (error) {
-        console.log("error in reset password", error);
-        res.status(400).json({success: false, message: error.message});
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "password reset link sent to your email",
+        code: user.resetPasswordCode,
+      });
+  } catch (error) {
+    console.log("Error in forgot password: ", error);
+    res.status(400).json({ sucess: false, message: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { code } = req.params;
+    const { newPassword, confirmNewPassword } = req.body;
+    if (confirmNewPassword !== newPassword) {
+      return res.status(500).json({ message: "Passwords do not match." });
     }
-}
+    const user = await User.findOne({
+      resetPasswordCode: code,
+      resetPasswordCodeExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "invalid or expired reset token" });
+    }
+
+    user.password = newPassword;
+    user.resetPasswordCode = undefined;
+    user.resetPasswordCodeExpiresAt = undefined;
+    await user.save();
+
+    await sendPasswordResetSuccessEmail(user.email);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Password reset successful" });
+  } catch (error) {
+    console.log("error in reset password", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// controllers/authController.js
+
+export const resendVerificationCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+   
+   const verificationCode = randomInt(0, 1000000)
+  .toString()
+  .padStart(6, "0");
+    user.verificationCode = verificationCode;
+    user.verificationCodeExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h expiry
+    await user.save();
+
+    // Send email
+    await sendVerificationEmail(user.email, verificationCode);
+
+    res.status(200).json({ message: "Verification code resent successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to resend verification code" });
+  }
+};

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import {motion} from "motion/react"
 import {Lock, Mail, User2, UserPlus, ArrowRight, Loader, Eye, EyeOff} from "lucide-react"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useUserStore } from '../store/useUserStore'
 
 const SignupPage = () => {
   const {signup, loading}  = useUserStore();
- 
+ const navigate = useNavigate();
   const [formData, setFormData] = useState({
 		name: "",
 		email: "",
@@ -16,9 +16,11 @@ const SignupPage = () => {
     const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
       e.preventDefault();
-      signup(formData);
+      const sucess = await signup(formData);
+      if (sucess) navigate("/verify-email");
+     
   }
 
   return (
