@@ -344,7 +344,26 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-// controllers/authController.js
+
+
+export const verifyResetToken = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = await User.findOne({
+      resetPasswordCode: token,
+      resetPasswordCodeExpiresAt: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    res.json({ message: "Valid token" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 export const resendVerificationCode = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import React, { useState,  } from "react";
+import React, { useEffect, useState,  } from "react";
 import {Loader} from "lucide-react";
 import {useParams, useNavigate} from "react-router-dom"
 import { useUserStore } from "../store/useUserStore";
@@ -6,8 +6,9 @@ const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const {token} = useParams();
   const navigate = useNavigate();
+  const [valid, setValid] = useState(null);
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const {loading, resetPassword} = useUserStore();
+  const {loading, resetPassword, checkResetToken, validResetToken} = useUserStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res =  await resetPassword(token, newPassword, confirmNewPassword)
@@ -16,6 +17,14 @@ const ResetPasswordPage = () => {
     }
   };
 
+  useEffect(() => {
+  
+  checkResetToken(token);
+
+}, [token, checkResetToken]);
+   
+  if (validResetToken === false) return navigate("/forgot-password") ;
+  
   return (
     <div className="min-h-screen flex justify-center items-center p-4">
       <div

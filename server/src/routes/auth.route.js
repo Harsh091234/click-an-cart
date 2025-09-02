@@ -1,7 +1,7 @@
 
 import express from 'express';
 import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyEmail, forgotPassword, resetPassword, resendVerificationCode,
-    setPassword
+    setPassword,  verifyResetToken
 } from '../controllers/auth.controller.js';
 import { protectRoute } from '../middlewares/auth.middleware.js';
 
@@ -19,6 +19,7 @@ router.post("/forgot-password",forgotPassword)
 router.post('/logout', logout);
 router.get("/profile", protectRoute, getProfile);
 router.post("/reset-password/:code", resetPassword);
+router.get("/verify-reset-token/:token",  verifyResetToken)
 router.post("/resend-verification", resendVerificationCode);
 router.post("/set-password", protectRoute, setPassword);
 

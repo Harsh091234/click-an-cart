@@ -7,6 +7,7 @@ export const useUserStore = create((set, get) => ({
   clientId: null,
   loading: false,
   checkingAuth: true,
+  validResetToken: null,
 
   setClientId: async () => {
     try {
@@ -154,6 +155,16 @@ export const useUserStore = create((set, get) => ({
       console.error("Reset password error:", err);
       toast.error(err.response.data.message || "Something went wrong");
       set({ loading: false });
+    }
+  },
+  checkResetToken: async (token) => {
+    try {
+      await axios.get(`/auth/verify-reset-token/${token}`);
+      set({ validResetToken: true });
+
+    } catch(err) {
+      set({ validResetToken: false });
+      console.error("Error in password reset token", err);
     }
   },
   setUserPassword: async (password) => {

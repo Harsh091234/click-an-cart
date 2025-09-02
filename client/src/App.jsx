@@ -97,13 +97,13 @@ const App = () => {
               <Route
                 path="/forgot-password"
                 element={
-                  user ? <ForgotPasswordPage /> : <Navigate to="/login" />
+                   <ForgotPasswordPage />
                 }
               />
               <Route
                 path="/reset-password/:token"
                 element={
-                  user ? <ResetPasswordPage /> : <Navigate to="/login" />
+              <ResetPasswordPage />
                 }
               />
 
