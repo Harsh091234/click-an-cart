@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     const res = await forgotPassword(email);
     if (res?.success) {
-      setEmailSent(true);
+      
     }
   };
 

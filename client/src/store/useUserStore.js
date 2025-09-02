@@ -7,7 +7,6 @@ export const useUserStore = create((set, get) => ({
   clientId: null,
   loading: false,
   checkingAuth: true,
-  
 
   setClientId: async () => {
     try {
@@ -87,7 +86,6 @@ export const useUserStore = create((set, get) => ({
       );
     }
   },
-
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
@@ -102,7 +100,6 @@ export const useUserStore = create((set, get) => ({
       );
     }
   },
-
   logout: async () => {
     try {
       await axios.post("/auth/logout");
@@ -141,45 +138,41 @@ export const useUserStore = create((set, get) => ({
     }
   },
   resetPassword: async (code, newPassword, confirmNewPassword) => {
-  set({ loading: true });
-  if(confirmNewPassword !== newPassword){
-    return toast.error("Passwords do not match");
-  }
-  try {
-    const res = await axios.post(`/auth/reset-password/${code}`, {
-      newPassword,
-    
-    });
-
-    toast.success(res.data.message);
-    set({ loading: false });
-    return res.data;
-  } catch (err) {
-    console.error("Reset password error:", err);
-    toast.error(err.response.data.message || "Something went wrong");
-    set({ loading: false });
-  }
-},
-setUserPassword: async (password) => {
+    set({ loading: true });
+    if (confirmNewPassword !== newPassword) {
+      return toast.error("Passwords do not match");
+    }
     try {
-      set({ loading: true});
+      const res = await axios.post(`/auth/reset-password/${code}`, {
+        newPassword,
+      });
+
+      toast.success(res.data.message);
+      set({ loading: false });
+      return res.data;
+    } catch (err) {
+      console.error("Reset password error:", err);
+      toast.error(err.response.data.message || "Something went wrong");
+      set({ loading: false });
+    }
+  },
+  setUserPassword: async (password) => {
+    try {
+      set({ loading: true });
 
       const res = await axios.post("/auth/set-password", { password });
       console.log("res", res.data);
       set({
-        user: res.data
-       
+        user: res.data,
       });
-       toast.success("Password set successfully");
-       return res.data;
+      toast.success("Password set successfully");
+      return res.data;
     } catch (err) {
       set({
         loading: false,
-       
       });
       console.error("Error setting password:", err);
       toast.error(err.response?.data?.message || "Something went wrong");
     }
   },
-
 }));

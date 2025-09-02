@@ -190,9 +190,10 @@ export const login = async (req, res) => {
 
       res.json({
         _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+       isVerified: user.isVerified,
       });
     } else {
       res.status(400).json({ message: "Invalid email or password" });
@@ -394,7 +395,8 @@ export const setPassword = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        hasPassword: user.hasPassword
+        hasPassword: user.hasPassword,
+        isVerified: user.isVerified,
     });
   } catch (err) {
     console.error("Set password error:", err);

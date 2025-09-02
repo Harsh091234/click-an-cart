@@ -84,6 +84,15 @@ const SetPasswordPage = () => {
     </>
   )}
 </button>
+<p className="mt-4 text-right">
+  <button
+    type="button"
+    onClick={() => navigate("/")}
+    className="text-emerald-400 hover:underline text-xs md:text-sm lg:text-base"
+  >
+    Set Later
+  </button>
+</p>
 
         </motion.form>
       </div>

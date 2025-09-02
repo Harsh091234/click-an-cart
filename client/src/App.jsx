@@ -39,7 +39,17 @@ const App = () => {
               {/* Root route */}
               <Route
                 path="/"
-                element={user ? <HomePage /> : <Navigate to="/login" />}
+                element={
+                  user ? (
+                    user.isVerified ? (
+                      <HomePage />
+                    ) : (
+                      <Navigate to="/verify-email" />
+                    )
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
               />
 
               {/* Auth related routes */}
@@ -55,19 +65,46 @@ const App = () => {
 
               <Route
                 path="/verify-email"
-                element={user ? <VerifyEmailPage /> : <Navigate to="/signup" />}
+                element={
+                  user ? (
+                    !user.isVerified ? (
+                      <VerifyEmailPage />
+                    ) : (
+                      <Navigate to="/" />
+                    )
+                  ) : (
+                    <Navigate to="/signup" />
+                  )
+                }
               />
 
               <Route
                 path="/set-password"
-                element={user ? <SetPasswordPage /> : <Navigate to="/login" />}
+                element={
+                  user ? (
+                    !user.hasPassword ? (
+                      <SetPasswordPage />
+                    ) : (
+                      <Navigate to="/" />
+                    )
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
               />
 
               {/* Forgot/reset password */}
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route
+                path="/forgot-password"
+                element={
+                  user ? <ForgotPasswordPage /> : <Navigate to="/login" />
+                }
+              />
               <Route
                 path="/reset-password/:token"
-                element={<ResetPasswordPage />}
+                element={
+                  user ? <ResetPasswordPage /> : <Navigate to="/login" />
+                }
               />
 
               {/* Catch-all */}
