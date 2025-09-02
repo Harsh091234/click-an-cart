@@ -43,7 +43,7 @@ const LoginPage = () => {
         sm:w-90 md:w-97 md:py-7.5 lg:w-[32rem] lg:px-11 lg:py-8'>
           <form onSubmit={handleSubmit}>
 
-            {/* Email */}
+          
             <div className='flex flex-col gap-0.5 mb-3 md:gap-1.5 lg:gap-2'>
               <label className='text-sm md:text-base lg:text-lg'>Email address</label>
               <div className='flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
@@ -63,8 +63,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            {/* Password */}
-            <div className='flex flex-col gap-0.5 mb-5 md:gap-1.5 md:mb-6 lg:mb-7 lg:gap-2'>
+            <div className='flex flex-col gap-0.5 mb-3 md:gap-1.5 md:mb-4 lg:mb-5 lg:gap-2'>
               <label className='text-sm md:text-base lg:text-lg'>Password</label>
               <div className='flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
               md:py-1.5 md:px-4 lg:py-2 lg:px-5 relative'>
@@ -93,9 +92,17 @@ const LoginPage = () => {
                   </button>
                 )}
               </div>
+                <Link 
+    to="/forgot-password" 
+    className="text-emerald-400 text-right text-xs md:text-sm lg:text-base  hover:underline mt-0.5"
+  >
+    Forgot password?
+  </Link> 
             </div>
+       
 
-            {/* Submit Button */}
+
+       
             <button
               className='bg-emerald-600 flex gap-1.5 justify-center rounded-lg py-1.5 text-sm font-semibold w-full 
               md:text-base md:gap-2 md:py-2 
@@ -110,7 +117,7 @@ const LoginPage = () => {
           </form>
         </div>
 
-        {/* Link to Signup */}
+ 
         <div className='text-xs flex gap-1 mt-5 md:text-sm md:gap-1.5 lg:text-base lg:gap-2 '>
           <h1 className='text-gray-400'>Don't have an account?</h1>
           <Link to="/signup" className='text-emerald-400 flex items-end font-bold'>

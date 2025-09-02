@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useUserStore } from "../store/useUserStore";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 
 const VerifyEmailPage = () => {
@@ -34,8 +35,21 @@ const VerifyEmailPage = () => {
   const handleVerify = async() => {
     const code = otp.join("");
    const success = await verifyEmail(code);
-    if(success) navigate("/")
-  };
+   
+
+      if(success.authProvider === "google"){
+        console.log("helo")
+        navigate("/set-password");
+      }
+      else{
+        navigate("/");
+      }
+      
+         
+     
+    }
+  
+ 
 
 
 
@@ -70,9 +84,22 @@ const VerifyEmailPage = () => {
         </div>
 
         {/* Button */}
-        <button onClick={handleVerify} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition w-full">
-          Verify Email
-        </button>
+     <button
+  onClick={handleVerify}
+  disabled={loading}
+  className={`bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition w-full flex items-center justify-center gap-2
+    ${loading ? "opacity-50 cursor-not-allowed" : ""}
+  `}
+>
+  {loading ? (
+    <>
+      <Loader className="animate-spin h-5 w-5" />
+      Loading...
+    </>
+  ) : (
+    "Verify Email"
+  )}
+</button>
 
         {/* Resend link */}
         <p className="text-sm text-gray-400">

@@ -18,8 +18,8 @@ const SignupPage = () => {
 
   const handleSubmit = async(e) => {
       e.preventDefault();
-      const sucess = await signup(formData);
-      if (sucess) navigate("/verify-email");
+      const success = await signup(formData);
+      if (success) navigate("/verify-email");
      
   }
 

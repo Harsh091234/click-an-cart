@@ -69,7 +69,9 @@ export const googleAuth = async (req, res) => {
       user = await User.create({
         name,
         email,
+        hasPassword: false,
          verificationCode,
+        
       verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         authProvider: "google",
       });
@@ -165,6 +167,7 @@ export const verifyEmail = async (req, res) => {
       name: user.name,
       email: user.email,
       isVerified: true,
+      authProvider: user.authProvider
     });
   } catch (error) {
     console.error("Error in verifyEmail controller:", error.message);
@@ -211,7 +214,7 @@ export const logout = async (req, res) => {
       );
       await redis.del(`refresh_token: ${decoded.userId}`);
       
-      await user.save();
+    
     }
 
     res.clearCookie("accessToken");
@@ -310,10 +313,9 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { code } = req.params;
-    const { newPassword, confirmNewPassword } = req.body;
-    if (confirmNewPassword !== newPassword) {
-      return res.status(500).json({ message: "Passwords do not match." });
-    }
+    const { newPassword } = req.body;
+    console.log("code:", code);
+    console.log("password:", newPassword)
     const user = await User.findOne({
       resetPasswordCode: code,
       resetPasswordCodeExpiresAt: { $gt: Date.now() },
@@ -367,5 +369,35 @@ export const resendVerificationCode = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to resend verification code" });
+  }
+};
+
+export const setPassword = async (req, res) => {
+  try {
+    const {_id} = req.user; 
+    
+    const { password} = req.body;
+
+
+    const user = await User.findById(_id);
+    console.log("user: ", user)
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+    user.password = password;
+    user.hasPassword = true;
+
+    await user.save();
+
+    res.status(200).json({
+      _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        hasPassword: user.hasPassword
+    });
+  } catch (err) {
+    console.error("Set password error:", err);
+    res.status(500).json({ success: false, message: "Server error.", hasPassword: false });
   }
 };
