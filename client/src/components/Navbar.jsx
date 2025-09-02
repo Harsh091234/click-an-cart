@@ -40,12 +40,30 @@ const Navbar = () => {
        
       <div className="flex gap-3 items-center text-sm">
        {(user) &&
-        <div>
+        <div className="flex  items-center gap-4">
           <Link
           to="/"
           className="text-gray-400 hover:text-gray-200 transition"
         >
           Home
+        </Link>
+         <Link
+          to="/"
+          className="text-gray-400 hover:text-gray-200 transition"
+        >
+          Dashboard
+        </Link>
+         <Link
+          to="/"
+          className="text-gray-400 hover:text-gray-200 transition"
+        >
+          Cart 
+        </Link>
+         <Link
+          to="/"
+          className="text-gray-400 hover:text-gray-200 transition"
+        >
+          Get cart plus
         </Link>
            <button onClick={handleLogout}  className=" flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg  transition">
          <LogOut className="h-4 w-4" /> Logout
