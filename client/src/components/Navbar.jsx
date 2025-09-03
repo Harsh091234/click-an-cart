@@ -32,76 +32,65 @@ const Navbar = () => {
   });
 
   return (
-    <nav className="bg-gray-800 px-6 py-3 flex justify-between items-center shadow border-b border-b-emerald-800">
-     
-      <h1 className="text-emerald-500 font-bold text-2xl">Click-n-Cart !!</h1>
+ <nav className="bg-sky-500 px-6 py-3 flex justify-between items-center shadow border-b border-b-sky-600">
+  {/* Brand */}
+  <h1 className="text-white font-bold text-2xl">Click-n-Cart !!</h1>
 
-     
-       
-      <div className="flex gap-3 items-center text-sm">
-       {(user) &&
-        <div className="flex  items-center gap-4">
-          <Link
+  {/* Nav Links / Buttons */}
+  <div className="flex gap-3 items-center text-sm">
+    {user && (
+      <div className="flex items-center gap-4">
+        <Link
           to="/"
-          className="text-gray-400 hover:text-gray-200 transition"
+          className="text-gray-200 font-semibold hover:text-white transition"
         >
           Home
         </Link>
-         <Link
+        <Link
           to="/"
-          className="text-gray-400 hover:text-gray-200 transition"
+          className="text-gray-200 font-semibold hover:text-white transition"
         >
           Dashboard
         </Link>
-         <Link
-          to="/"
-          className="text-gray-400 hover:text-gray-200 transition"
-        >
-          Cart 
-        </Link>
-         <Link
-          to="/"
-          className="text-gray-400 hover:text-gray-200 transition"
-        >
-          Get cart plus
-        </Link>
-           <button onClick={handleLogout}  className=" flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg  transition">
-         <LogOut className="h-4 w-4" /> Logout
-        </button>
-          </div>} 
-
-        {/* <Link
-          to="/signup"
-          className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white  px-4 py-1.5 rounded-lg transition"
-        >
-          <UserPlus className="h-4 w-4" />
-          Sign Up
-        </Link>
-
         <Link
-          to="/login"
-          className="flex items-center gap-1.5 bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded-lg  transition"
+          to="/"
+          className="text-gray-200 font-semibold hover:text-white transition"
         >
-          <LogIn className="h-4 w-4" />
-          Login
-        </Link> */}
-        {!user 
-        && <button
-              onClick={loginWithGoogle}
-              className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg transition"
-            >
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google"
-                className="h-4 w-4"
-              />
-              Login with Google
-            </button>
-     
-        }
-         
+          Cart
+        </Link>
+       <Link
+  to="/"
+  className="bg-white text-sky-600 font-semibold px-4 py-1.5 rounded-full shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+>
+  Get CartPlus
+</Link>
+
+    <button
+  onClick={handleLogout}
+  className="flex items-center gap-1.5 text-red-600 font-semibold bg-white px-4 py-1.5 rounded-lg shadow-sm  hover:bg-gray-100 hover:shadow-md transition"
+>
+  <LogOut className="h-4 w-4" /> Logout
+</button>
       </div>
-    </nav>
+    )}
+
+    {!user && (
+      
+<button
+  onClick={loginWithGoogle}
+  className="flex items-center gap-1.5 text-sky-600 font-semibold bg-white px-4 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google"
+    className="h-4 w-4"
+  />
+  Login with Google
+</button>
+    )}
+  </div>
+</nav>
+
   );
 };
 
