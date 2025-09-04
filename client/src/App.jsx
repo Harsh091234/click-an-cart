@@ -16,7 +16,7 @@ import SetPasswordPage from "./pages/SetPasswordPage";
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
-  const hasAccess = user && user.isVerified && user.hasPassword;
+
 
   useEffect(() => {
     checkAuth();

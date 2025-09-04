@@ -10,10 +10,6 @@ export default function GoogleProviderWrapper({ children }) {
     setClientId();
   }, []);
 
-  if (!clientId) {
-    return <p>Loading Google OAuth...</p>; 
-  }
-
   return (
     <GoogleOAuthProvider clientId={clientId}>
       {children}
