@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import {motion} from "motion/react"
-import {Lock, Mail, User2, UserPlus, ArrowRight, Loader, Eye, EyeOff} from "lucide-react"
+import {Lock, Mail, User2, UserPlus, ArrowRight, Loader, Eye, EyeOff, User} from "lucide-react"
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserStore } from '../store/useUserStore'
+import GoogleLoginButton from '../components/ui/GoogleLoginButton'
 
 const SignupPage = () => {
   const {signup, loading}  = useUserStore();
@@ -24,90 +25,71 @@ const SignupPage = () => {
   }
 
   return (
-    <div className='flex flex-col py-10 justify-center items-center px-2'> 
-      <motion.div
-      initial={{opacity: 0, y:-20}}
-      animate={{opacity: 1, y:0}}
-      transition={{duration: 0.8, delay: 0.2}}>
-        <h1 className='text-emerald-400 font-bold text-[1.8rem] md:text-[2rem]
-        lg:text-[2.2rem]'>Create your Account</h1>
-      </motion.div>
-     <motion.div 
-     	className='flex flex-col items-center w-full'
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8, delay: 0.2 }}>
- <div className='bg-gray-800 rounded-lg shadow py-7 px-7 w-full  mt-6
- sm:w-90 md:w-97 md:py-7.5 lg:w-[32rem] lg:px-11 lg:py-8 '>
-<form onSubmit={handleSubmit}>
+<div className="flex h-full ">
+  <div className="flex flex-col h-full items-center justify-center w-full md:w-[50%] lg:w-[35%] px-3 py-2">
+    <div className="w-full  flex flex-col md:w-[70%] lg:w-[60%] xl:w-[45%]">
+      {/* Title */}
+      <h1 className="text-gray-700 font-semibold text-[1.1rem] md:text-[1.3rem] lg:text-[1.5rem] text-left">
+        Register Account
+      </h1>
+
+      {/* Form */}
+    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-9 w-full">
   {/* Full Name */}
-  <div className="flex flex-col gap-0.5 mb-3 md:gap-1.5 lg:gap-2">
-    <label className="text-sm md:text-base lg:text-lg">Full name</label>
-    <div className="flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
-    md:py-1.5 md:px-4 lg:py-2 lg:px-5">
-      <span className="text-gray-400">
-        <User2 className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-      </span>
+  <div className="flex flex-col gap-1 mb-2 w-full">
+    <label className="text-xs text-gray-600 font-semibold">Full Name</label>
+    <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
+      <User className="w-4 h-4 text-gray-400" />
       <input
         placeholder="John Doe"
         required
         value={formData.name}
-        onChange={e => setFormData({ ...formData, name: e.target.value })}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         type="text"
-        className="text-sm w-full px-1.5 outline-0 
-        md:text-base md:px-2 lg:text-lg lg:px-2.5"
+        className="ml-2 text-xs w-full outline-0 text-gray-700"
       />
     </div>
   </div>
 
   {/* Email */}
-  <div className="flex flex-col gap-0.5 mb-3 md:gap-1.5 lg:gap-2">
-    <label className="text-sm md:text-base lg:text-lg">Email address</label>
-    <div className="flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
-    md:py-1.5 md:px-4 lg:py-2 lg:px-5">
-      <span className="text-gray-400">
-        <Mail className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-      </span>
+  <div className="flex flex-col gap-1 mb-2 w-full">
+    <label className="text-xs text-gray-600 font-semibold">Email</label>
+    <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
+      <Mail className="w-4 h-4 text-gray-400" />
       <input
         placeholder="you@example.com"
         required
         value={formData.email}
-        onChange={e => setFormData({ ...formData, email: e.target.value })}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         type="text"
-        className="text-sm w-full outline-0 px-1.5 
-        md:text-base md:px-2 lg:text-lg lg:px-2.5"
+        className="ml-2 text-xs w-full outline-0 text-gray-700"
       />
     </div>
   </div>
 
   {/* Password */}
-  <div className="flex flex-col gap-0.5 mb-3 md:gap-1.5 lg:gap-2">
-    <label className="text-sm md:text-base lg:text-lg">Password</label>
-    <div className="flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
-    md:py-1.5 md:px-4 lg:py-2 lg:px-5 relative">
-      <span className="text-gray-400">
-        <Lock className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-      </span>
+  <div className="flex flex-col gap-1 mb-2 w-full">
+    <label className="text-xs text-gray-600 font-semibold">Password</label>
+    <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 relative focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
+      <Lock className="w-4 h-4 text-gray-400" />
       <input
         placeholder="••••••••"
         required
         value={formData.password}
-        onChange={e => setFormData({ ...formData, password: e.target.value })}
+        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         type={showPassword ? "text" : "password"}
-        className="text-sm w-full outline-0 px-1.5 
-        md:text-base md:px-2 lg:text-lg lg:px-2.5"
+        className="ml-2 text-xs w-full text-gray-700 outline-0"
       />
       {formData.password && (
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 top-1.5 text-gray-400 
-          md:top-2 lg:top-2.5"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-sky-500 transition"
         >
           {showPassword ? (
-            <EyeOff className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" />
+            <EyeOff className="h-4 w-4" />
           ) : (
-            <Eye className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" />
+            <Eye className="h-4 w-4" />
           )}
         </button>
       )}
@@ -115,71 +97,94 @@ const SignupPage = () => {
   </div>
 
   {/* Confirm Password */}
-  <div className="flex flex-col gap-0.5 mb-5 md:gap-1.5 lg:gap-2 md:mb-6 lg:mb-7 ">
-    <label className="text-sm md:text-base lg:text-lg">Confirm Password</label>
-    <div className="flex bg-gray-700 items-center border border-gray-600 rounded-lg py-1 px-3 
-    md:py-1.5 md:px-4 lg:py-2 lg:px-5 relative">
-      <span className="text-gray-400">
-        <Lock className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-      </span>
+  <div className="flex flex-col gap-1 mb-0.5 w-full">
+    <label className="text-xs text-gray-600 font-semibold">Confirm Password</label>
+    <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 relative focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
+      <Lock className="w-4 h-4 text-gray-400" />
       <input
         placeholder="••••••••"
         required
         value={formData.confirmPassword}
-        onChange={e =>
-          setFormData({ ...formData, confirmPassword: e.target.value })
-        }
-        type={showConfirm ? "text" : "password"}
-        className="text-sm w-full outline-0 px-1.5 
-        md:text-base md:px-2 lg:text-lg lg:px-2.5"
+        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+        type={showPassword ? "text" : "password"}
+        className="ml-2 text-xs w-full text-gray-700 outline-0"
       />
-      {formData.confirmPassword && (
-        <button
-          type="button"
-          onClick={() => setShowConfirm(!showConfirm)}
-          className="absolute right-2 top-1.5 text-gray-400 
-          md:top-2 lg:top-2.5"
-        >
-          {showConfirm ? (
-            <EyeOff className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" />
-          ) : (
-            <Eye className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" />
-          )}
-        </button>
-      )}
     </div>
   </div>
 
-  {/* Submit Button */}
+  {/* Forgot Password */}
+  <div className="flex mb-4 w-full">
+    <Link
+      to="/forgot-password"
+      className="text-sky-600 font-medium ml-auto text-[0.6rem] hover:underline"
+    >
+      Forgot password?
+    </Link>
+  </div>
+
+  {/* Login/Register Button */}
   <button
-    className="bg-emerald-600 flex gap-1.5 justify-center rounded-lg py-1.5 text-sm font-semibold w-full 
-    md:text-base md:gap-2 md:py-2 
-    lg:text-lg lg:gap-2.5 lg:py-2.5 disabled:opacity-65"
+    className="bg-sky-500 hover:bg-sky-600 text-white flex gap-1 justify-center items-center rounded-md py-1.5 font-semibold w-full 
+    md:text-xs md:gap-1.5 md:py-2 
+    lg:text-xs lg:gap-1.5 lg:py-2 
+    transition-colors duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md"
     type="submit"
     disabled={loading}
   >
     {!loading ? (
       <>
-        <UserPlus className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" /> Sign up
+        <UserPlus className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4" />
+        Register
       </>
     ) : (
       <>
-        <Loader className="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7 animate-spin" /> Loading...
+        <Loader className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6 animate-spin" />
+        Loading...
       </>
     )}
   </button>
 </form>
 
 
+      {/* Divider */}
+      <div className="flex items-center w-full gap-2 my-2.5
+      
+      
+      ">
+      
+      <div className="flex-grow h-[1px] bg-gray-200"></div>
+        <span className="text-gray-500 text-xs font-medium">or</span>
+        <div className="flex-grow h-[1px] bg-gray-200"></div>
+      </div>
 
+      {/* Google Login Button */}
+      <GoogleLoginButton
+        styles={
+          "flex items-center gap-6 text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
+        } imageStyles={"h-4 w-4"}
+      />
+
+      {/* Signup Link */}
+      <div className="text-xs flex justify-center gap-1 mt-3 md:text-sm lg:text-[0.7rem] w-full">
+        <h1 className="text-gray-500">Already have an account?</h1>
+        <Link to="/login" className="text-sky-600 flex items-end font-medium">
+          Login
+          <ArrowRight className="h-3 w-3 md:h-4 md:w-4 lg:h-3 lg:w-3" />
+        </Link>
       </div>
-        
-      <div className='text-xs flex gap-1 mt-5 md:text-sm md:gap-1.5 lg:text-base lg:gap-2'>
-        <h1 className='text-gray-400'>Already have an account?</h1> <Link to="/login" className='text-emerald-400 flex items-end font-bold'>Login here <ArrowRight className="h-3 w-3 md:h-4 md:w-4  lg:w-5 lg:h-5" /></Link>
-      </div>
-     </motion.div>
-   
     </div>
+  </div>
+
+  {/* Right Image */}
+  <div className="hidden md:block object-center w-[50%] lg:w-[65%] h-full relative ">
+    <img
+      src="/e-commerce ui.png"
+      alt="E-commerce illustration"
+      className="object-cover h-full w-full"
+    />
+  </div>
+</div>
+
   )
 }
 

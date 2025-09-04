@@ -26,7 +26,7 @@ const App = () => {
   }, [checkAuth]);
 
   return (
-    <div className="h-screen bg-white text-white relative  flex flex-col">
+    <div className="h-screen bg-white  text-white relative  flex flex-col">
       {/* Background gradient */}
 
       {checkingAuth || !delayDone ? (
@@ -34,7 +34,7 @@ const App = () => {
       ) : (
         <div className="relative z-50 h-full flex flex-col overflow-hidden">
           <Navbar />
-          <div className="flex-1  ">
+          <div className="flex-1  overflow-hidden">
             <Routes>
               {/* Root route */}
               <Route

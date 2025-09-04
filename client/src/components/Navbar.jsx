@@ -15,9 +15,9 @@ const Navbar = () => {
  
 
   return (
-    <nav className="bg-sky-500 px-6 py-3 flex justify-between items-center shadow border-b border-b-sky-600">
+    <nav className="bg-sky-500 px-6 py-2 flex justify-between items-center shadow border-b border-b-sky-600">
       {/* Brand */}
-      <h1 className="text-white font-bold text-2xl">Click-n-Cart !!</h1>
+      <h1 className="text-white font-serif italic font-bold text-xl">Click-n-Cart !!</h1>
 
       {/* Nav Links / Buttons */}
       <div className="flex gap-3 items-center text-sm">
@@ -58,7 +58,7 @@ const Navbar = () => {
         )}
 
         {!user && (
-          <GoogleLoginButton styles={"flex gap-1 items-center text-sky-600 font-semibold bg-white px-4 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"} />
+          <GoogleLoginButton styles={"flex gap-1 items-center text-sky-600 font-semibold bg-white px-3 py-1.5 rounded-lg text-xs shadow-sm hover:bg-gray-100 hover:shadow-md transition"} imageStyles={"h-3.5 w-4.5"} />
         )}
       </div>
     </nav>

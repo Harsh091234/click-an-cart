@@ -2,7 +2,7 @@ import React from 'react'
 import { useGoogleLogin } from "@react-oauth/google";
 import { useUserStore } from '../../store/useUserStore'
 
-const GoogleLoginButton = ({styles}) => {
+const GoogleLoginButton = ({styles, imageStyles}) => {
     const { googleLogin,} = useUserStore();
      const loginWithGoogle = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
@@ -30,9 +30,9 @@ const GoogleLoginButton = ({styles}) => {
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
               alt="Google"
-              className="h-4 w-4"
+              className={imageStyles}
             />
-            Login with Google
+            Continue with Google
           </button>
   )
 }
