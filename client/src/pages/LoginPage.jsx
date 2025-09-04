@@ -97,9 +97,9 @@ const LoginPage = () => {
 
   {/* Login Button */}
   <button
-    className="bg-sky-500 hover:bg-sky-600 text-white flex gap-1 justify-center items-center rounded-md py-1.5 font-semibold w-full 
-    md:text-xs md:gap-1.5 md:py-2 
-    lg:text-xs lg:gap-1.5 lg:py-2 
+    className="bg-sky-500 hover:bg-sky-600 text-white flex gap-1 justify-center items-center rounded-md font-semibold w-full 
+    md:gap-1.5 
+    text-xs lg:gap-1.5 py-2 lg:text-sm 
     transition-colors duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md"
     type="submit"
     disabled={loading}
@@ -129,8 +129,8 @@ const LoginPage = () => {
       {/* Google Login Button */}
       <GoogleLoginButton
         styles={
-          "flex items-center gap-6 text-sky-600 font-medium bg-white border border-gray-300 px-4 md:py-1.5 lg:py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
-        } imageStyles={"h-4 w-4"}
+          "flex items-center gap-6 text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
+        } imageStyles={"h-4 w-4"} 
       />
 
       {/* Signup Link */}

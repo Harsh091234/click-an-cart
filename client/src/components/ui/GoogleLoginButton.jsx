@@ -2,7 +2,7 @@ import React from 'react'
 import { useGoogleLogin } from "@react-oauth/google";
 import { useUserStore } from '../../store/useUserStore'
 
-const GoogleLoginButton = ({styles, imageStyles}) => {
+const GoogleLoginButton = ({styles, imageStyles, textStyles}) => {
     const { googleLogin,} = useUserStore();
      const loginWithGoogle = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
@@ -32,7 +32,10 @@ const GoogleLoginButton = ({styles, imageStyles}) => {
               alt="Google"
               className={imageStyles}
             />
-            Continue with Google
+            <span className={textStyles}>
+                Continue with Google
+            </span>
+          
           </button>
   )
 }
