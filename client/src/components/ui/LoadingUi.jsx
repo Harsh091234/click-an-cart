@@ -37,7 +37,7 @@ export default function LoadingUi({ message = "Loading" }) {
             className="grid place-items-center rounded-xl bg-blue-50 p-2.5 sm:p-3"
             aria-hidden
           >
-            <ShoppingCart className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-blue-500" />
+            <ShoppingCart className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-blue-400" />
           </motion.div>
 
           <div className="flex flex-col pl-2 ">
@@ -59,7 +59,7 @@ export default function LoadingUi({ message = "Loading" }) {
         {/* Loading text row */}
         <div className="flex items-baseline gap-0.5 sm:gap-1">
           <motion.span
-            className="text-sm sm:text-base md:text-lg font-semibold text-blue-600"
+            className="text-sm sm:text-base md:text-lg font-semibold text-blue-400"
             animate={{ opacity: [0.35, 1, 0.35] }}
             transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -71,7 +71,7 @@ export default function LoadingUi({ message = "Loading" }) {
         {/* Slimmer progress shimmer bar */}
         <div className="mt-3 h-1 sm:h-1.5 md:h-2  mx-auto  overflow-hidden w-full rounded-full bg-gray-200">
           <motion.div
-            className="h-full w-1/3 rounded-full bg-blue-500"
+            className="h-full w-1/3 rounded-full bg-blue-400"
             initial={{ x: "-100%" }}
             animate={{ x: ["-100%", "300%"] }}
             transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}

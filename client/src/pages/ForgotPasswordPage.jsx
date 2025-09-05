@@ -1,92 +1,89 @@
-import React, { useState } from "react";
-import { Mail, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useRef, useState } from "react";
+import { ArrowLeft, Loader } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
-  const [emailSent, setEmailSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { forgotPassword } = useUserStore();
+  
+  const [otpSent, setOtpSent] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await forgotPassword(email);
-    if (res?.success) {
-      
+
+  const navigate = useNavigate();
+  const { forgotPassword, loading } = useUserStore();
+
+
+  const handleForgotPassword = async () => {
+   
+    const success = await forgotPassword(email); 
+    if(success){
+      setOtpSent(true)
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 sm:p-6 md:p-8 lg:p-12">
-      <div
-        className="
-          w-full 
-          bg-gray-800 rounded-2xl shadow-xl overflow-hidden
-          sm:max-w-md md:max-w-lg lg:max-w-xl 2xl:max-w-2xl
-        "
-      >
-        {/* Form Section */}
-        <div className="px-6 py-10 sm:px-8 sm:py-10 md:px-10 md:py-12 lg:px-12 lg:py-14  space-y-6 md:space-y-8">
-          <div className="text-center">
-            {emailSent ? (
-              <h1 className="text-base sm:text-lg md:text-xl font-bold text-emerald-500">
-                Email Sent Successfully. <br />
-                 Check your inbox.
-              </h1>
-            ) : (
-              <>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-500 mb-2">
-                  Forgot Password
-                </h1>
-                <p className="text-gray-400 text-sm sm:text-base md:text-lg">
-                  Enter your email address and we'll send you a link to reset your
-                  password
-                </p>
-              </>
-            )}
-          </div>
+    <div className="h-full flex justify-center items-center p-4">
+      <div className="w-full max-w-md rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        {/* Content Section */}
+        <div className="px-6 py-7  text-center">
+          <h1 className="text-3xl font-semibold text-gray-700 mb-7">
+            Forgot Password
+          </h1>
 
-          {!emailSent && (
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-              <div className="flex items-center border border-gray-600 rounded-lg px-3 py-2 md:px-4 md:py-3 focus-within:ring-2 focus-within:ring-emerald-500">
-                <Mail className="text-emerald-500 mr-2 h-5 w-5 md:h-6 md:w-6" />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full outline-none text-gray-200 bg-gray-800 placeholder-gray-400 text-sm sm:text-base md:text-lg"
-                  required
-                />
-              </div>
-
+          {!otpSent ? (
+            <>
+              <p className="text-gray-500 text-sm mb-4">
+                Enter your email to receive a password reset code
+              </p>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 mb-2 text-sm rounded-lg border border-gray-300 bg-gray-50 text-gray-700 focus:outline-none focus:ring-1 focus:ring-sky-500"
+              />
               <button
-                type="submit"
+                onClick={handleForgotPassword}
                 disabled={loading}
-                className={`w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold 
-                  py-2 sm:py-2.5 md:py-3 lg:py-3.5 
-                  text-sm sm:text-base md:text-lg
-                  rounded-lg shadow-md transition flex justify-center items-center gap-2
-                  ${loading ? "opacity-50 cursor-not-allowed" : ""}
-                `}
+                className={`w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 text-sm rounded-lg shadow-md transition flex justify-center items-center gap-2 ${
+                  loading ? "opacity-60 cursor-not-allowed" : ""
+                }`}
               >
-                {loading ? "Sending..." : "Send Reset Link"}
+                {loading ? (
+                  <>
+                    <Loader className="animate-spin h-4 w-4" />
+                    Sending...
+                  </>
+                ) : (
+                  "Send Reset Code"
+                )}
               </button>
-            </form>
+            </>
+          ) : (
+            <>
+              <p className="text-sm mt-6 text-gray-600">
+  <span className="block font-medium text-green-600">
+    ✅ OTP sent successfully!
+  </span>
+  <span className="block mt-1">
+    Please check your inbox:{" "}
+    <span className="font-semibold text-gray-800">{email}</span>
+  </span>
+</p>
+
+             
+             
+            </>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-4 bg-gray-900 text-center border-t border-gray-700">
+        <div className="px-4 py-4 bg-sky-50 text-center border-t border-gray-200">
           <Link
             to="/login"
-            className="inline-flex items-center 
-              text-emerald-500 hover:text-emerald-400 
-              text-sm sm:text-base md:text-lg font-medium
-            "
+            className="inline-flex items-center text-sky-500 hover:text-sky-600 text-sm font-medium"
           >
-            <ArrowLeft className="mr-1 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+            <ArrowLeft className="mr-1 h-4 w-4" />
             Back to login
           </Link>
         </div>

@@ -138,7 +138,7 @@ const SignupPage = () => {
       </>
     ) : (
       <>
-        <Loader className="h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6 animate-spin" />
+        <Loader className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4 animate-spin" />
         Loading...
       </>
     )}
