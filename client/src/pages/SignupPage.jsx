@@ -97,7 +97,7 @@ const SignupPage = () => {
   </div>
 
   {/* Confirm Password */}
-  <div className="flex flex-col gap-1 mb-0.5 w-full">
+  <div className="flex flex-col gap-1 mb-4 w-full">
     <label className="text-xs text-gray-600 font-semibold">Confirm Password</label>
     <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 relative focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
       <Lock className="w-4 h-4 text-gray-400" />
@@ -112,15 +112,7 @@ const SignupPage = () => {
     </div>
   </div>
 
-  {/* Forgot Password */}
-  <div className="flex mb-4 w-full">
-    <Link
-      to="/forgot-password"
-      className="text-sky-600 font-medium ml-auto text-[0.6rem] hover:underline"
-    >
-      Forgot password?
-    </Link>
-  </div>
+  
 
   {/* Login/Register Button */}
   <button
@@ -133,12 +125,12 @@ const SignupPage = () => {
   >
     {!loading ? (
       <>
-        <UserPlus className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4" />
+        <UserPlus className="h-4 w-4  lg:h-4 lg:w-4" />
         Register
       </>
     ) : (
       <>
-        <Loader className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4 animate-spin" />
+        <Loader className="h-4 w-4  lg:h-4 lg:w-4 animate-spin" />
         Loading...
       </>
     )}

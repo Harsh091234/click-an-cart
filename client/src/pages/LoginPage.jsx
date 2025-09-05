@@ -99,19 +99,19 @@ const LoginPage = () => {
   <button
     className="bg-sky-500 hover:bg-sky-600 text-white flex gap-1 justify-center items-center rounded-md font-semibold w-full 
     md:gap-1.5 
-    text-xs lg:gap-1.5 py-2 lg:text-sm 
+    text-xs lg:gap-1.5 py-2 lg:text-xs
     transition-colors duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md"
     type="submit"
     disabled={loading}
   >
     {!loading ? (
       <>
-        <LogIn className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4" />
+        <LogIn className="h-4 w-4 lg:h-4 lg:w-4" />
         Login
       </>
     ) : (
       <>
-        <Loader className="h-4 w-4 md:h-5 md:w-5 lg:h-4 lg:w-4 animate-spin" />
+        <Loader className="h-4 w-4  lg:h-4 lg:w-4 animate-spin" />
         Loading...
       </>
     )}

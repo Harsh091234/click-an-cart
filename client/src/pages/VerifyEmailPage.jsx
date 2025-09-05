@@ -7,7 +7,7 @@ const VerifyEmailPage = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
   const navigate = useNavigate();
-  const { verifyEmail, resendVerificationCode, user, loading } = useUserStore();
+  const { verifyEmail, resendVerificationCode, resending, user, loading } = useUserStore();
 
   const handleChange = (value, index) => {
     if (/^[0-9]?$/.test(value)) {
@@ -29,6 +29,7 @@ const VerifyEmailPage = () => {
 
   const handleResend = async () => {
     if (!user.email) return;
+      setOtp(new Array(6).fill(""));
     await resendVerificationCode(user.email);
   };
 
@@ -48,7 +49,7 @@ const VerifyEmailPage = () => {
       <div className="w-full max-w-md rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         {/* Content Section */}
         <div className="px-6 py-7 flex flex-col gap-3 text-center">
-          <h1 className="text-3xl font-semibold text-gray-600 mb-5">
+          <h1 className="text-3xl font-semibold text-gray-700 mb-5">
             Verify Email
           </h1>
           <p className="text-gray-500 text-sm">
@@ -74,21 +75,27 @@ const VerifyEmailPage = () => {
 
           {/* Verify Button */}
           <button
-            onClick={handleVerify}
-            disabled={loading}
-            className={`w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 mt-2 text-sm rounded-lg shadow-md transition flex justify-center items-center gap-2 ${
-              loading ? "opacity-60 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? (
-              <>
-                <Loader className="animate-spin h-4 w-4" />
-                Verifying...
-              </>
-            ) : (
-              "Verify Email"
-            )}
-          </button>
+  onClick={handleVerify}
+  disabled={loading || resending} // disable in both cases
+  className={`w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 mt-2 text-sm rounded-lg shadow-md transition flex justify-center items-center gap-2 ${
+    loading || resending ? "opacity-60 cursor-not-allowed" : ""
+  }`}
+>
+  {resending ? (
+    <>
+      <Loader className="animate-spin h-4 w-4" />
+      Resending...
+    </>
+  ) : loading ? (
+    <>
+      <Loader className="animate-spin h-4 w-4" />
+      Verifying...
+    </>
+  ) : (
+    "Verify Email"
+  )}
+</button>
+
 
           {/* Resend link */}
           <p className="text-sm text-gray-500">
@@ -102,7 +109,7 @@ const VerifyEmailPage = () => {
           </p>
         </div>
 
-        {/* Footer */}
+        {/* Footer
         <div className="px-4 py-4 bg-sky-50 text-center border-t border-gray-200">
           <Link
             to="/login"
@@ -111,7 +118,7 @@ const VerifyEmailPage = () => {
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to login
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

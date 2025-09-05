@@ -6,6 +6,7 @@ export const useUserStore = create((set, get) => ({
   user: null,
   clientId: null,
   loading: false,
+  resending: false,
   checkingAuth: true,
   validResetToken: null,
 
@@ -111,14 +112,14 @@ export const useUserStore = create((set, get) => ({
     }
   },
   resendVerificationCode: async (email) => {
-    set({ loading: true });
+    set({ resending: true });
     try {
       const res = await axios.post("/auth/resend-verification", { email });
-      set({ loading: false });
+      set({ resending: false });
       toast.success(res.data.message);
       return true;
     } catch (err) {
-      set({ loading: false });
+      set({ resending: false });
       console.error("Resend verification code failed", err);
       toast.error(err.response?.data?.message || "Failed to resend code");
       return false;
@@ -141,7 +142,9 @@ export const useUserStore = create((set, get) => ({
   resetPassword: async (code, newPassword, confirmNewPassword) => {
     set({ loading: true });
     if (confirmNewPassword !== newPassword) {
+       set({ loading: false });
       return toast.error("Passwords do not match");
+     
     }
     try {
       const res = await axios.post(`/auth/reset-password/${code}`, {

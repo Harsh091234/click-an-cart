@@ -26,7 +26,7 @@ const App = () => {
   }, [checkAuth]);
 
   return (
-    <div className="h-screen bg-white  text-white relative  flex flex-col">
+    <div className="h-screen bg-base-100  text-white relative  flex flex-col">
       {/* Background gradient */}
 
       {checkingAuth || !delayDone ? (

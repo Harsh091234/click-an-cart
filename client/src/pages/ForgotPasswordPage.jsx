@@ -23,7 +23,7 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="h-full flex justify-center items-center p-4">
-      <div className="w-full max-w-md rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+      <div className="w-full sm:max-w-md rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         {/* Content Section */}
         <div className="px-6 py-7  text-center">
           <h1 className="text-3xl font-semibold text-gray-700 mb-7">
@@ -61,9 +61,9 @@ const ForgotPasswordPage = () => {
             </>
           ) : (
             <>
-              <p className="text-sm mt-6 text-gray-600">
+              <p className="text-base mt-6 text-gray-600">
   <span className="block font-medium text-green-600">
-    ✅ OTP sent successfully!
+    OTP sent successfully!
   </span>
   <span className="block mt-1">
     Please check your inbox:{" "}
