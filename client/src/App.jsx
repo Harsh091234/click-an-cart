@@ -13,6 +13,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SetPasswordPage from "./pages/SetPasswordPage";
 import AdminPage from "./pages/AdminPage";
+import CategoryPage from "./pages/CategoryPage";
 
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
@@ -126,6 +127,20 @@ const App = () => {
               <ResetPasswordPage />
                 }
               />
+              <Route
+  path="/category/:category"
+  element={
+    user ? (
+      user.isVerified ? (
+        <CategoryPage />
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
 
            
               <Route path="*" element={<NotFoundPage />} />

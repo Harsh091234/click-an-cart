@@ -5,6 +5,7 @@ export const useProductStore = create((set) => ({
     loading: false,
     uploading: false,
     products: [],
+    
     setProducts: (products) => set({products}),
     createProducts: async(productData) => {
         set({ loading: true });
@@ -41,5 +42,43 @@ export const useProductStore = create((set) => ({
       
     }
   },
+  toggleFeatureProduct: async(productId) => {
+      set({loading: true});
+      try {
+        const res = await axios.patch(`/products/${productId}`)
+        set((prevProducts) => ({
+          products: prevProducts.products.map((product) => product._id === productId ? {...product, isFeatured: res.data.isFeatured} : product),
+          loading: false,
+        }))
+
+      } catch (error) {
+        set({loading: false});
+        toast.error(error.response.data.error || "Failed to update product");
+      }
+  },
+   deleteProduct: async (productId) => {
+    set({ loading: true });
+    try {
+      await axios.delete(`/products/${productId}`);   
+      set((prevProducts) => ({
+        products: prevProducts.products.filter((product) => product._id !== productId), loading:false
+      }));
+
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product", error);
+      toast.error(error.response?.data?.message || "Failed to delete product");
+    } 
+  },
+  fetchProductsByCategory: async(category) => {
+    try {
+      set({ loading: true });
+      const res = await axios.post(`/products/category/${category}`);
+      set({ products: res.data.products, loading: false });
+    } catch (err) {
+      console.error("Error fetching products by category:", err);
+      set({ loading: false });
+    }
+  }
   
 }));

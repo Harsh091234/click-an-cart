@@ -152,7 +152,7 @@ const SignupPage = () => {
       {/* Google Login Button */}
       <GoogleLoginButton
         styles={
-          "flex items-center gap-6 text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
+          "flex items-center gap-3 justify-center text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
         } imageStyles={"h-4 w-4"}
       />
 

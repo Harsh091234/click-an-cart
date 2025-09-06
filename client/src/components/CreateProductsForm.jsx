@@ -4,7 +4,7 @@ import { useProductStore } from "../store/useProductStore";
 
 const categories = [
   "jeans",
-  "t-shirts",
+  "t-shirt",
   "shoes",
   "glasses",
   "jackets",
