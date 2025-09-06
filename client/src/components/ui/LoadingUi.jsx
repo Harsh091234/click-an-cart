@@ -4,13 +4,13 @@ import { ShoppingCart, Sparkles } from "lucide-react";
 
 export default function LoadingUi({ message = "Loading" }) {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4 sm:p-6">
+    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4 sm:p-6">
       <div
         role="status"
         aria-live="polite"
         className="
           relative w-full
-          max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl
+          max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl
           rounded-xl border border-gray-200 
           bg-white shadow-md
           p-5 sm:p-7 md:p-9 lg:p-10

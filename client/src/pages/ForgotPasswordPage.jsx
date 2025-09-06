@@ -84,7 +84,7 @@ const ForgotPasswordPage = () => {
             className="inline-flex items-center text-sky-500 hover:text-sky-600 text-sm font-medium"
           >
             <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to login
+            Back
           </Link>
         </div>
       </div>

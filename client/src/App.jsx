@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotPageFound";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SetPasswordPage from "./pages/SetPasswordPage";
+import AdminPage from "./pages/AdminPage";
 
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
@@ -26,8 +27,8 @@ const App = () => {
   }, [checkAuth]);
 
   return (
-    <div className="h-screen bg-base-100  text-white relative  flex flex-col">
-      {/* Background gradient */}
+    <div className="h-screen bg-base-300  text-black relative  flex flex-col">
+    
 
       {checkingAuth || !delayDone ? (
         <LoadingUi />
@@ -51,8 +52,27 @@ const App = () => {
                   )
                 }
               />
+           <Route
+  path="/secret-dashboard"
+  element={
+    user ? (
+      user.isVerified ? (
+        user.role === "admin" ? (
+          <AdminPage />
+        ) : (
+          <Navigate to="/login" />
+        )
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
 
-              {/* Auth related routes */}
+
+          
               <Route
                 path="/signup"
                 element={!user ? <SignupPage /> : <Navigate to="/" />}
@@ -93,7 +113,7 @@ const App = () => {
                 }
               />
 
-              {/* Forgot/reset password */}
+            
               <Route
                 path="/forgot-password"
                 element={
@@ -107,7 +127,7 @@ const App = () => {
                 }
               />
 
-              {/* Catch-all */}
+           
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </div>

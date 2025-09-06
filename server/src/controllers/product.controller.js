@@ -1,5 +1,8 @@
 import Product from "../models/product.model.js";
 import {redis} from "../utils/redis.js"
+import cloudinary from "../utils/cloudinary.js"
+import { dummyProducts } from "../data/dummyProducts.data.js";
+
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -37,21 +40,21 @@ export const getfeaturedProducts = async(req, res) => {
 
 export const createProduct = async(req, res) => {
   try {
-    const {name, image, description, price, category} = req.body;
+    const {name, image, description, price, category, stock} = req.body;
 
     let cloudinaryResponse = null;
     if(image){
-      cloudinaryResponse = await cloudinaryResponse.uploader.upload(image, {folder: "products"});
+      cloudinaryResponse = await cloudinary.uploader.upload(image, {folder: "products"});
     }
     const product = await Product.create({
       name, 
       description,
       price,
-      image: cloudinaryResponse?.secure_url ? cloudinaryResponse.secure_url :
-      "",
+      stock,
+      image: cloudinaryResponse?.secure_url || "",
       category
     })
-
+    console.log("product: ", product);
     res.status(201).json(product);
 
   } catch (error) {
@@ -154,3 +157,17 @@ const updateFeaturedProductsCache = async() => {
       console.error("Error in updateFeaturedProductsCache:", error.message);
   }
 }
+
+export const uploadDummyProducts = async (req, res) => {
+  try {
+
+    await Product.insertMany(dummyProducts);
+    res.status(201).json({ message: "Dummy products uploaded successfully!" });
+  } catch (error) {
+    console.error("Error uploading dummy products:", error.message);
+    res.status(500).json({
+      message: "Error uploading dummy products",
+      error: error.message,
+    });
+  }
+};

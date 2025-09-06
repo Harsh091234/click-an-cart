@@ -1,9 +1,10 @@
 import React from 'react'
 import { useGoogleLogin } from "@react-oauth/google";
 import { useUserStore } from '../../store/useUserStore'
-
+import { useNavigate } from 'react-router-dom';
 const GoogleLoginButton = ({styles, imageStyles, textStyles}) => {
-    const { googleLogin,} = useUserStore();
+  const navigate = useNavigate();  
+  const { googleLogin,} = useUserStore();
      const loginWithGoogle = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       if (credentialResponse?.access_token) {
