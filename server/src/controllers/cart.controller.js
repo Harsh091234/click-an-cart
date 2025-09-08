@@ -3,20 +3,21 @@ import Product from "../models/product.model.js";
 export const addToCart = async(req, res) => {
     try {
         const {productId} = req.body;
+       
         const user = req.user;
-
-        const existingItem = user.cartItem.find(item => item.id === productId);
+         console.log("item", user.cartItems)
+        const existingItem = user.cartItems.find((item) => item.id  === productId);
         if(existingItem) {
             existingItem.quantity += 1;
         }
         else{
-            user.cartItem.push(productId)
+            user.cartItems.push(productId)
         }
 
         await user.save();
         res.json(user.cartItems)
     } catch (error) {
-        onsole.error("Error in addToCart:", error.message);
+        console.error("Error in addToCart:", error.message);
     res.status(500).json({ message: "Failed to add product to cart" });
     }
 }

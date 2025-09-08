@@ -73,7 +73,7 @@ export const useProductStore = create((set) => ({
   fetchProductsByCategory: async(category) => {
     try {
       set({ loading: true });
-      const res = await axios.post(`/products/category/${category}`);
+      const res = await axios.get(`/products/category/${category}`);
       set({ products: res.data.products, loading: false });
     } catch (err) {
       console.error("Error fetching products by category:", err);

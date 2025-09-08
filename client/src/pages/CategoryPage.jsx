@@ -19,10 +19,13 @@ const CategoryPage = () => {
 
   {/* Products Grid */}
   <div className="flex flex-wrap gap-6">
-    <ProductCard />
-    <ProductCard />
-    <ProductCard />
-    <ProductCard />
+  {products.length > 0 ? (
+        products.map((product) => (
+          <ProductCard key={product._id} product={product} />
+        ))
+      ) : (
+        <p className="text-gray-500">No products available</p>
+      )}
   </div>
 </div>
 
