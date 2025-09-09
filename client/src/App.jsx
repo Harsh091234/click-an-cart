@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
 import { useUserStore } from "./store/useUserStore";
+
 import LoadingUi from "./components/ui/LoadingUi";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import NotFoundPage from "./pages/NotPageFound";
@@ -14,11 +15,13 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SetPasswordPage from "./pages/SetPasswordPage";
 import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
+import { useCartStore } from "./store/useCartStore";
+import CartPage from "./pages/CartPage";
 
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
-
+  const {getCartItems} = useCartStore();
 
   useEffect(() => {
     checkAuth();
@@ -27,6 +30,9 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [checkAuth]);
 
+  useEffect(() => {
+    getCartItems()
+  }, [getCartItems])
   return (
     <div className="h-screen bg-base-300  text-black relative  flex flex-col">
     
@@ -133,6 +139,20 @@ const App = () => {
     user ? (
       user.isVerified ? (
         <CategoryPage />
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
+  <Route
+  path="/cart"
+  element={
+    user ? (
+      user.isVerified ? (
+        <CartPage />
       ) : (
         <Navigate to="/verify-email" />
       )
