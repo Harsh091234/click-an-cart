@@ -31,8 +31,9 @@ const App = () => {
   }, [checkAuth]);
 
   useEffect(() => {
+    if(!user) return;
     getCartItems()
-  }, [getCartItems])
+  }, [getCartItems, user])
   return (
     <div className="h-screen bg-base-300  text-black relative  flex flex-col">
     
