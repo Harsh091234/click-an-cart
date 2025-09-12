@@ -4,3 +4,8 @@
 button:hover{
     cursor: pointer;
 }
+
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none !important;
+}

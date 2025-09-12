@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
 
       {/* Product Info */}
       <p className="mt-3 text-lg font-semibold text-gray-800">{product.name}</p>
-      <span className="text-sky-500 font-bold text-xl ">{product.price}</span>
+      <span className="text-sky-500 font-bold text-xl ">${product.price}</span>
 
       {/* Add to Cart Button */}
       <button

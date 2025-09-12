@@ -1,17 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCartStore } from '../store/useCartStore';
 import { Loader, Loader2 } from 'lucide-react';
 
 const GiftCouponCard = () => {
   const [userInputCode, setUserInputCode] = useState(""); 
-const {coupon, isCouponApplied} = useCartStore
+const {coupon, isCouponApplied, removeCoupon,  applyCoupon, getMyCoupon} = useCartStore();
  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getMyCoupon();
+  }, [getMyCoupon])
+
+  useEffect(() => {
+    if(coupon) setUserInputCode(coupon.code);
+  }, [coupon])
  const handleApplyCoupon = () => {
-    
+    if(!userInputCode) return;
+    applyCoupon(userInputCode);
  }
 
- const handleRemoveCoupon = () => {
-    
+ const handleRemoveCoupon = async() => {
+    await removeCoupon();
+    setUserInputCode("")
  }
 
   return (

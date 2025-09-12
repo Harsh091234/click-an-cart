@@ -9,9 +9,9 @@ const PeopleAlsoBoughtCard = ({ product }) => {
   const { addToCart } = useCartStore();
 
   const handleAddToCart = async () => {
-    setLoading(true);
+   
     await addToCart(product);
-    setLoading(false);
+
   };
 
   return (

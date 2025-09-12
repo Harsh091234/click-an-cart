@@ -3,15 +3,36 @@ import { useCartStore } from "../store/useCartStore";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import OrderSummarySkeleton from "./skeletons/OrderSummarySkeleton";
+import axios from "../utils/axios"
+import {loadStripe} from "@stripe/stripe-js"
+
 
 const OrderSummary = () => {
-  const { total, subTotal, coupon, isCouponApplied, loading } = useCartStore();
+  const stripePromise = loadStripe("pk_test_51RzZj1ByUgeXTDbnqF5Z64dJuQ3lUdJmBDUpOOTqTOnIKjJrL7p2MSsgYtUJv0CrSVu3nACtS4jmOLErf9qQXi0D009hIERMJZ")
+
+  const { total, subTotal, coupon, isCouponApplied, loading, cart } = useCartStore();
   const savings = subTotal - total;
 
   const formattedSubTotal = subTotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
-  
+  const handlePayment = async() => {
+      const stripe = await stripePromise;
+      const res = await axios.post("/payments/create-checkout-session", {
+        products: cart,
+       couponCode: coupon? coupon.code : null
+      })
+      console.log("res", res.data)
+      const session = res.data;
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id
+      })
+      
+      if(result.error){
+        console.error("Error:", result.error);
+      }
+  }
+
   return (
     <div className="bg-white  rounded-xl shadow-md py-4 px-5 w-full">
       <h2 className="text-xl font-semibold text-sky-500 mb-2">Order Summary</h2>
@@ -51,7 +72,7 @@ const OrderSummary = () => {
           </div>
 
           {/* Checkout button */}
-          <button className="w-full bg-sky-500 text-white py-2 rounded-lg font-medium hover:bg-sky-600 transition text-sm">
+          <button onClick={handlePayment} className="w-full bg-sky-500 text-white py-2 rounded-lg font-medium hover:bg-sky-600 transition text-sm">
             Proceed to Checkout
           </button>
 

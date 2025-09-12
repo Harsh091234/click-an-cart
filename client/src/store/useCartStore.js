@@ -23,7 +23,9 @@ export const useCartStore = create((set, get) => ({
       console.error("Error fetching cart items:", err);
     }
   },
-
+  clearCart: async () => {
+    set({cart: [], coupon: null, total:0, subTotal: 0});
+  },
   addToCart: async (product) => {
       console.log("product: ", product);
     try {
@@ -112,6 +114,33 @@ fetchRecommendations: async () => {
 
     set({subTotal, total, loading:false});
 
+  },
+
+  getMyCoupon: async() => {
+    try {
+      const response = await axios.get("/coupons");
+      set({coupon: response.data})
+    } catch (error) {
+      console.error("Error in getMyCoupon: ", error);
+    }
+  },
+
+  applyCoupon: async(code) => {
+    try {
+      const res = await axios.post("/coupons/validate", {code});
+      set({coupon: res.data, isCouponApplied: true});
+      get().calculateTotals();
+      toast.success("Coupon applied successfully");  
+    } catch (error) {
+            console.error("Error applying coupon:", error);
+         toast.error(error.response.data.message);
+    }
+  },
+
+  removeCoupon: async() => {
+    set({coupon: null, isCouponApplied: false});
+      get().calculateTotals();
+      toast.success("Coupon removed successfully");
   }
 }));
 

@@ -1,9 +1,10 @@
 import User from "../models/user.model.js";
 import Order from "../models/order.model.js"
-export const getAnalyticsData = async (req, res) => {
+import Product from "../models/product.model.js"
+export const getAnalyticsData = async () => {
   try {
     const totalUsers = await User.countDocuments();
-    const totalProducts = await Products.countDocuments();
+    const totalProducts = await Product.countDocuments();
 
     const salesData = await Order.aggregate([
         {
@@ -24,7 +25,7 @@ export const getAnalyticsData = async (req, res) => {
         totalRevenue,
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    throw error;
   }
 };
 

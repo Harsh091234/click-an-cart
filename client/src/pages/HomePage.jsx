@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CategoryItem from "../components/CategoryItem";
 import CategoryItemSkeleton from "../components/skeletons/CategoryItemSkeleton";
 import { useProductStore } from "../store/useProductStore";
+import FeaturedProducts from "../components/FeaturedProducts";
 
 const categories = [
   { href: "/jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
@@ -13,7 +14,7 @@ const categories = [
 ];
 
 const HomePage = () => {
-  const { loading } = useProductStore();
+  const { loading, fetchFeaturedProducts,products } = useProductStore();
   const [delayedLoading, setDelayedLoading] = useState(true);
 
   useEffect(() => {
@@ -29,6 +30,10 @@ const HomePage = () => {
 
     return () => clearTimeout(timer);
   }, [loading]);
+
+  	useEffect(() => {
+		fetchFeaturedProducts();
+	}, [fetchFeaturedProducts]);
 
   return (
     <div className="h-full px-3 py-3 text-black overflow-y-auto">
@@ -48,6 +53,8 @@ const HomePage = () => {
               <CategoryItem key={category.name} category={category} />
             ))}
       </div>
+
+      	{!loading && products.length > 0 && <FeaturedProducts featuredProducts={products} />}
     </div>
   );
 };

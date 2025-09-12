@@ -20,7 +20,7 @@ const PeopleAlsoBought = () => {
 
       {/* Content */}
       {loading ? (
-        <p className="text-gray-500 text-sm"><PeopleAlsoBoughtSkeleton /></p>
+        <PeopleAlsoBoughtSkeleton />
       ) : recommendations.length > 0 ? (
         <div className="flex gap-3 flex-wrap">
           {recommendations.map((item) => (

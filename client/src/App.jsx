@@ -17,7 +17,8 @@ import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
 import { useCartStore } from "./store/useCartStore";
 import CartPage from "./pages/CartPage";
-
+import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
+import PurchaseCancelPage from "./pages/PurchaseCancelPage";
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
@@ -163,6 +164,35 @@ const App = () => {
   }
 />
 
+  <Route
+  path="/purchase-success"
+  element={
+    user ? (
+      user.isVerified ? (
+        <PurchaseSuccessPage />
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
+
+  <Route
+  path="/purchase-cancel"
+  element={
+    user ? (
+      user.isVerified ? (
+        <PurchaseCancelPage />
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
            
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
@@ -170,6 +200,8 @@ const App = () => {
         </div>
       )}
     </div>
+
+
   );
 };
 
