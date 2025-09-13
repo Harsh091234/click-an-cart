@@ -3,19 +3,27 @@ import { PlusCircle, ShoppingBasket, BarChart2 } from "lucide-react";
 import AnalyticsTab from "../components/AnalyticsTab";
 import ProductsList from "../components/ProductsList";
 import CreateProductForm from "../components/CreateProductsForm";
+import { useUserStore } from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function DashboardTabs() {
   const [active, setActive] = useState("products");
-  
+  const {user} = useUserStore();
+ const navigate = useNavigate();  
   const tabs = [
     { id: "create", label: "Create Product", icon: PlusCircle },
     { id: "products", label: "Products", icon: ShoppingBasket },
     { id: "analytics", label: "Analytics", icon: BarChart2 },
   ];
 
-
+  
+  useEffect(() => {
+    if ( user.role !== "admin") {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="h-full flex flex-col gap-2 items-center px-3 py-3 overflow-y-auto">

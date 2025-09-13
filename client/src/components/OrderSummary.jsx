@@ -80,7 +80,7 @@ const OrderSummary = () => {
           <div className="flex items-center justify-center gap-1 mt-3 text-xs text-gray-600">
             <span className="text-gray-600 mr-0.5">or</span>
             <Link
-              to="/products"
+              to="/"
               className="flex items-center  text-sky-700 hover:underline"
             >
               Continue Shopping

@@ -61,16 +61,12 @@ const App = () => {
                   )
                 }
               />
-           <Route
+          <Route
   path="/secret-dashboard"
   element={
     user ? (
       user.isVerified ? (
-        user.role === "admin" ? (
-          <AdminPage />
-        ) : (
-          <Navigate to="/login" />
-        )
+        <AdminPage />
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -79,6 +75,7 @@ const App = () => {
     )
   }
 />
+
 
 
           

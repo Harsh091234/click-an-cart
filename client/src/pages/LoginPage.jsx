@@ -39,7 +39,7 @@ const LoginPage = () => {
       </h1>
 
       {/* Form */}
-    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-9 w-full">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-3 md:mt-9 w-full">
   {/* Email */}
   <div className="flex flex-col gap-1 mb-2 w-full">
     <label className="text-xs text-gray-600 font-semibold">Email</label>
@@ -57,7 +57,7 @@ const LoginPage = () => {
   </div>
 
   {/* Password */}
-  <div className="flex flex-col gap-1 mb-2 w-full">
+  <div className="flex flex-col gap-1 mb-0.5 md:mb-2 w-full">
     <label className="text-xs text-gray-600 font-semibold">Password</label>
     <div className="flex items-center border border-gray-300 rounded-md py-1.5 px-2.5 relative focus-within:ring-1 focus-within:ring-sky-400 hover:border-sky-300 transition">
       <Lock className="w-4 h-4 text-gray-400" />
@@ -86,7 +86,7 @@ const LoginPage = () => {
   </div>
 
   {/* Forgot Password */}
-  <div className="flex mb-4 w-full">
+  <div className="flex mb-2 md:mb-4 w-full">
     <Link
       to="/forgot-password"
       className="text-sky-600 font-medium ml-auto text-[0.6rem] hover:underline"
@@ -120,7 +120,7 @@ const LoginPage = () => {
 
 
       {/* Divider */}
-      <div className="flex items-center w-full gap-2 my-2.5">
+      <div className="flex items-center w-full  gap-2  my-1 md:my-2.5">
         <div className="flex-grow h-[1px] bg-gray-200"></div>
         <span className="text-gray-500 text-xs font-medium">or</span>
         <div className="flex-grow h-[1px] bg-gray-200"></div>
@@ -134,7 +134,7 @@ const LoginPage = () => {
       />
 
       {/* Signup Link */}
-      <div className="text-xs flex justify-center gap-1 mt-3 md:text-sm lg:text-[0.7rem] w-full">
+      <div className="text-xs flex justify-center gap-1 mt-2 md:mt-3 md:text-sm lg:text-[0.7rem] w-full">
         <h1 className="text-gray-500">Don’t have an account?</h1>
         <Link to="/signup" className="text-sky-600 flex items-end font-medium">
           Sign up

@@ -53,14 +53,14 @@ const Navbar = () => {
 </Link>
 
   </div>
-
-  <Link
+  {user.role === "admin" &&   <Link
     to="/secret-dashboard"
     className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
   >
     <Lock className="w-4 h-4 text-sky-600" />
     <span className="hidden md:inline">Dashboard</span>
-  </Link>
+  </Link>}
+
 
   {/* <Link
     to="/premium"
@@ -120,14 +120,14 @@ const Navbar = () => {
       </span>
     )}
   </Link>
-
-  <Link
+    {user.role === "admin" &&    <Link
     to="/secret-dashboard"
     onClick={() => setMenuOpen(false)}
     className="w-full text-center py-2 rounded-lg hover:bg-sky-100 transition"
   >
     Dashboard
   </Link>
+}
 
   <button
     onClick={handleLogout}

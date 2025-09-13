@@ -34,7 +34,7 @@ const SignupPage = () => {
       </h1>
 
       {/* Form */}
-    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-9 w-full">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center mt-3 md:mt-9 w-full">
   {/* Full Name */}
   <div className="flex flex-col gap-1 mb-2 w-full">
     <label className="text-xs text-gray-600 font-semibold">Full Name</label>
@@ -117,7 +117,7 @@ const SignupPage = () => {
   {/* Login/Register Button */}
   <button
     className="bg-sky-500 hover:bg-sky-600 text-white flex gap-1 justify-center items-center rounded-md py-1.5 font-semibold w-full 
-    md:text-xs md:gap-1.5 md:py-2 
+    text-xs md:gap-1.5 md:py-2 
     lg:text-xs lg:gap-1.5 lg:py-2 
     transition-colors duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md"
     type="submit"
@@ -139,7 +139,7 @@ const SignupPage = () => {
 
 
       {/* Divider */}
-      <div className="flex items-center w-full gap-2 my-2.5
+      <div className="flex items-center w-full gap-2 my-1 md:my-2.5
       
       
       ">
@@ -157,7 +157,7 @@ const SignupPage = () => {
       />
 
       {/* Signup Link */}
-      <div className="text-xs flex justify-center gap-1 mt-3 md:text-sm lg:text-[0.7rem] w-full">
+      <div className="text-xs flex justify-center gap-1 mt-2 md:mt-3 md:text-sm lg:text-[0.7rem] w-full">
         <h1 className="text-gray-500">Already have an account?</h1>
         <Link to="/login" className="text-sky-600 flex items-end font-medium">
           Login
