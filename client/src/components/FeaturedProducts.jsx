@@ -74,9 +74,9 @@ const FeaturedProducts = ({ featuredProducts }) => {
         ref={scrollRef}
         className="py-2 flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-8"
       >
-        {featuredProducts.map((product) => (
+        {featuredProducts.map((product, index) => (
           <div
-            key={product.id}
+           key={product._id || product.id || index}
             className="flex-shrink-0 w-48 sm:w-52 md:w-60"
           >
             <div className="bg-white rounded-xl shadow-md p-3 flex flex-col items-center">

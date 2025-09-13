@@ -23,7 +23,7 @@ export const useCartStore = create((set, get) => ({
       console.error("Error fetching cart items:", err);
     }
   },
-  clearCart: async () => {
+  clearCart: () => {
     set({cart: [], coupon: null, total:0, subTotal: 0});
   },
   addToCart: async (product) => {
