@@ -106,7 +106,7 @@ export const useUserStore = create((set, get) => ({
     try {
       await axios.post("/auth/logout");
       set({ user: null });
-      toast.success("User logout successfully.")
+      toast.success("User logout successfully.");
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error(error.response?.data?.message || "Failed to log out.");
@@ -143,9 +143,8 @@ export const useUserStore = create((set, get) => ({
   resetPassword: async (code, newPassword, confirmNewPassword) => {
     set({ loading: true });
     if (confirmNewPassword !== newPassword) {
-       set({ loading: false });
+      set({ loading: false });
       return toast.error("Passwords do not match");
-     
     }
     try {
       const res = await axios.post(`/auth/reset-password/${code}`, {
@@ -165,8 +164,7 @@ export const useUserStore = create((set, get) => ({
     try {
       await axios.get(`/auth/verify-reset-token/${token}`);
       set({ validResetToken: true });
-
-    } catch(err) {
+    } catch (err) {
       set({ validResetToken: false });
       console.error("Error in password reset token", err);
     }
@@ -190,4 +188,52 @@ export const useUserStore = create((set, get) => ({
       toast.error(err.response?.data?.message || "Something went wrong");
     }
   },
+
+  refreshToken: async () => {
+    if (get().checkingAuth) return;
+
+    set({ checkingAuth: true });
+    try {
+      const res = await axios.post("/auth/refresh-token");
+const { accessToken } = res.data;
+axios.defaults.withCredentials = true;
+
+set({ checkingAuth: false });
+
+      return res.data;
+    } catch (error) {
+      set({ user: null, checkingAuth: false });
+      throw error;
+    }
+  },
 }));
+
+let refreshPromise = null;
+
+//to refresh access token
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        if (refreshPromise) {
+          await refreshPromise;
+          return axios(originalRequest);
+        }
+
+        refreshPromise = useUserStore.getState().refreshToken();
+        await refreshPromise;
+        refreshPromise = null;
+
+        return axios(originalRequest);
+      } catch (refreshError) {
+        useUserStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);

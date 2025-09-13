@@ -13,7 +13,7 @@ import {
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "1d",
   });
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
@@ -36,7 +36,7 @@ const setCookies = (res, refreshToken, accessToken) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 15 * 60 * 1000,
+    maxAge: 1 * 24 * 60 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
@@ -244,17 +244,17 @@ export const refreshToken = async (req, res) => {
     const accessToken = jwt.sign(
       { userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "1m" }
     );
 
-    res.cookie("access_token", accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
+      maxAge: 1 * 60 * 1000,
     });
 
-    res.json({ message: "Token refreshed successfully" });
+   res.json({ accessToken });
   } catch (error) {
     console.log("Error in refreshToken controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });

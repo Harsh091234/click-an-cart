@@ -36,7 +36,7 @@ const HomePage = () => {
 	}, [fetchFeaturedProducts]);
 
   return (
-    <div className="h-full px-3 py-3 text-black overflow-y-auto">
+    <div className="h-full px-3 py-3 text-black overflow-y-auto w-full">
       <h1 className="mt-8 mb-3 text-center text-4xl font-bold text-sky-500">
         Explore Our Categories
       </h1>
@@ -44,7 +44,7 @@ const HomePage = () => {
         Discover the latest trends in eco-friendly fashion
       </p>
 
-      <div className="flex flex-wrap justify-center px-10 gap-3">
+      <div className="flex flex-wrap max-w-[80rem] w-full justify-center px-10 gap-3 mb-4">
         {delayedLoading
           ? Array.from({ length: 6 }).map((_, idx) => (
               <CategoryItemSkeleton key={idx} />
@@ -54,7 +54,11 @@ const HomePage = () => {
             ))}
       </div>
 
-      	{!loading && products.length > 0 && <FeaturedProducts featuredProducts={products} />}
+      	{!loading && products.length > 0 && 
+      
+           <FeaturedProducts featuredProducts={products} />
+     }
+       
     </div>
   );
 };

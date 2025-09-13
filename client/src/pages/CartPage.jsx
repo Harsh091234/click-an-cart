@@ -43,7 +43,7 @@ const CartPage = () => {
       )}
        {
         cart.length > 0 && (
-          <div className="w-full  sm:w-[70%]  md:w-[33%]">
+          <div className="w-full  mt-20 md:mt-8 sm:w-[70%]  md:w-[33%]">
            <OrderSummary />
             
             <GiftCouponCard />
