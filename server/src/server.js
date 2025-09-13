@@ -28,9 +28,9 @@ app.use(cors({
   credentials: true,                // allow cookies/auth headers if needed
 }))
 
-app.get("/", (req, res) => {
-    res.send("Hello, World!");
-})
+// app.get("/", (req, res) => {
+//     res.send("Hello, World!");
+// })
 
 //routes
 app.use("/api/auth", authRoutes);
