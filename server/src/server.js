@@ -3,6 +3,8 @@ import dotenv from "dotenv"
 import connectDB from "./db/db.js";
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import path from 'path';
+
 //routes import
 import authRoutes from "./routes/auth.route.js";
 import productRoutes from "./routes/product.route.js"
@@ -14,7 +16,7 @@ import analyticsRoutes from "./routes/analytics.route.js"
 
 dotenv.config();
 
-
+const __dirname = path.resolve()
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -37,6 +39,14 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use('/api/analytics', analyticsRoutes)
+
+if(process.env.NODE_ENV === "production"){
+ 
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", "dist", "index.html"))
+  })
+}
 
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
