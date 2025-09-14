@@ -23,7 +23,7 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="h-full flex justify-center items-center p-4">
-      <div className="w-full sm:max-w-md rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+      <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         {/* Content Section */}
         <div className="px-6 py-7  text-center">
           <h1 className="text-3xl font-semibold text-gray-700 mb-7">

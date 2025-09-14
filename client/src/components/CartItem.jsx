@@ -30,7 +30,7 @@ const CartItem = ({ item, onDelete, onIncrement, onDecrement }) => {
 
       {/* Quantity Controls */}
       
-      <div className="flex  items-center gap-7">
+      <div className="flex flex-col min-[400px]:flex-row items-center gap-2 sm:gap-7">
 <div className="flex items-center gap-2">
         <button
           onClick={() => updateQuantity(item._id, item.quantity - 1)}

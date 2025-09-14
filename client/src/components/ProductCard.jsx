@@ -12,9 +12,9 @@ const ProductCard = ({ product }) => {
   console.log(product);
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-2 flex flex-col items-center text-center hover:shadow-lg transition">
+    <div className="bg-white rounded-xl w-full sm:w-[15rem] shadow-md p-2 flex flex-col items-center text-center hover:shadow-lg transition">
       {/* Product Image */}
-      <div className="h-40 w-56 flex items-center justify-center bg-sky-50 rounded-lg overflow-hidden">
+      <div className="h-60 sm:h-40 w-full flex items-center justify-center bg-sky-50 rounded-lg overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
