@@ -68,25 +68,28 @@ const HomePage = () => {
       	{!loading && products.length > 0 && 
       
            <FeaturedProducts featuredProducts={products} />
-     } {user.role !== "admin" &&     <button
-        onClick={handleClick}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        className="absolute bottom-10 right-10 flex items-center justify-center rounded-full bg-sky-500 text-white 
-                   hover:bg-white hover:text-sky-500 p-3 shadow-lg transition-all duration-300"
-      >
-        <RefreshCw size={17} />
+     } 
+     {
+    //  user.role !== "admin" &&     <button
+    //     onClick={handleClick}
+    //     onMouseEnter={() => setHover(true)}
+    //     onMouseLeave={() => setHover(false)}
+    //     className="absolute bottom-10 right-10 flex items-center justify-center rounded-full bg-sky-500 text-white 
+    //                hover:bg-white hover:text-sky-500 p-3 shadow-lg transition-all duration-300"
+    //   >
+    //     <RefreshCw size={17} />
 
-        {/* Hover label */}
-        {hover && (
-          <span
-            className="absolute bottom-0 right-15 bg-white text-sky-600 text-xs px-3 py-1 rounded-lg shadow-md
-                       transition-all duration-300 whitespace-nowrap"
-          >
-            Switch to Admin
-          </span>
-        )}
-      </button> }
+    //     {/* Hover label */}
+    //     {hover && (
+    //       <span
+    //         className="absolute bottom-0 right-15 bg-white text-sky-600 text-xs px-3 py-1 rounded-lg shadow-md
+    //                    transition-all duration-300 whitespace-nowrap"
+    //       >
+    //         Switch to Admin
+    //       </span>
+    //     )}
+    //   </button> 
+      }
     
     </div>
   );
