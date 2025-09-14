@@ -22,7 +22,7 @@ const ProductsList = () => {
 
     <div className="p-4 bg-white rounded-xl shadow-md">
       {/* Mobile Layout (Cards) */}
-      <div className="md:hidden max-h-87 overflow-y-auto space-y-4">
+      <div className="md:hidden max-h-87 scrollbar-hide overflow-y-auto space-y-4">
         {products?.map((p) => (
           <div
             key={p._id}

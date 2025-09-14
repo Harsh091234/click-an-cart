@@ -26,7 +26,7 @@ export default function DashboardTabs() {
   }, [user, navigate]);
 
   return (
-    <div className="h-full flex flex-col gap-2 items-center px-3 py-3 overflow-y-auto">
+    <div className="h-full flex flex-col gap-2 items-center px-3 py-3 overflow-y-auto scrollbar-hide">
       <h1 className="text-sky-500 text-3xl font-bold mt-5 mb-2">Admin Dashboard</h1>
 
       <div className="flex gap-2">

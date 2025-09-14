@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   const {addToCart} = useCartStore();
 
   const handleAddToCart = async() => {  await addToCart(product);};
-  console.log(product);
+
 
   return (
     <div className="bg-white rounded-xl w-full sm:w-[15rem] shadow-md p-2 flex flex-col items-center text-center hover:shadow-lg transition">

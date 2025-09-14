@@ -10,7 +10,7 @@ const CategoryPage = () => {
             fetchProductsByCategory(category);
     }, [fetchProductsByCategory])
   return (
-   <div className="h-full p-6 ">
+   <div className="h-full p-6 overflow-y-auto scrollbar-hide ">
   {/* Category Heading */}
     <h1 className="text-3xl font-bold text-sky-500 mb-6   text-center capitalize">
     {category}

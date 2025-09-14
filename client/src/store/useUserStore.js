@@ -47,7 +47,7 @@ export const useUserStore = create((set, get) => ({
 
     try {
       const res = await axios.post("/auth/register", { name, email, password });
-      console.log("data:", res.data);
+    
       set({ user: res.data, loading: false });
       toast.success("User created successfully");
       return true;
@@ -62,7 +62,7 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.post("/auth/verify-email", { code });
-      console.log("data:", res.data);
+      
       set({ loading: false, user: res.data });
 
       toast.success("Email verified successfully");
@@ -93,7 +93,7 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const res = await axios.get("/auth/profile");
-      console.log("auth user: ", res.data);
+   
       set({ user: res.data, checkingAuth: false });
     } catch (error) {
       set({ user: null, checkingAuth: false });
@@ -175,7 +175,7 @@ export const useUserStore = create((set, get) => ({
       set({ loading: true });
 
       const res = await axios.post("/auth/set-password", { password });
-      console.log("res", res.data);
+     
       set({
         user: res.data, loading: false
       });
@@ -211,9 +211,9 @@ export const useUserStore = create((set, get) => ({
       const { user } = get();
     set({switchLoading: true})
     try {
-      console.log("current user: ", user)
+      
       const res = await axios.post(`/auth/${user._id}/role`, {role: "admin"});
-      console.log("updated user: ", res.data);
+    
       set({user: res.data, switchLoading: false});
       toast.success("Switched to admin");
     } catch (error) {

@@ -44,7 +44,7 @@ const HomePage = () => {
       navigate("/");
   }
   return (
-    <div className="h-full px-3 py-3  justify-center text-black overflow-y-auto w-full">
+    <div className="h-full px-3 py-3  justify-center text-black overflow-y-auto w-full scrollbar-hide">
       <h1 className="mt-8 mb-3 text-center text-4xl font-bold text-sky-500">
         Explore Our Categories
       </h1>

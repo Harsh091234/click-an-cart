@@ -7,7 +7,7 @@ import {
   createProduct,
   getProductsByCategory,
   toggleFeaturedProduct,
-  uploadDummyProducts
+  
 } from "../controllers/product.controller.js";
 import { adminRoute, protectRoute,  } from "../middlewares/auth.middleware.js";
 
@@ -20,6 +20,6 @@ router.get("/category/:category", getProductsByCategory)
 router.post("/", protectRoute, adminRoute, createProduct);
 router.patch("/:id", protectRoute, adminRoute, toggleFeaturedProduct);
 router.delete("/:id", protectRoute, adminRoute, deleteProduct);
-router.post("/dummy", uploadDummyProducts);
+
 
 export default router;

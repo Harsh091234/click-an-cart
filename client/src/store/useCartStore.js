@@ -15,7 +15,7 @@ export const useCartStore = create((set, get) => ({
     try {
       set({loading: true});
       const res = await axios.get("/cart");
-      console.log("res: ", res.data)
+   
       set({ cart: res.data, loading: false });
       get().calculateTotals();
     } catch (err) {
@@ -27,7 +27,7 @@ export const useCartStore = create((set, get) => ({
     set({cart: [], coupon: null, total:0, subTotal: 0});
   },
   addToCart: async (product) => {
-      console.log("product: ", product);
+    
     try {
      
       await axios.post("/cart", { productId: product._id });
