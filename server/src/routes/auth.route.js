@@ -1,9 +1,9 @@
 
 import express from 'express';
 import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyEmail, forgotPassword, resetPassword, resendVerificationCode,
-    setPassword,  verifyResetToken
+    setPassword,  verifyResetToken, switchRoleToAdmin
 } from '../controllers/auth.controller.js';
-import { protectRoute } from '../middlewares/auth.middleware.js';
+import { adminRoute, protectRoute } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -22,6 +22,8 @@ router.post("/reset-password/:code", resetPassword);
 router.get("/verify-reset-token/:token",  verifyResetToken)
 router.post("/resend-verification", resendVerificationCode);
 router.post("/set-password", protectRoute, setPassword);
+//switch roles
+router.post("/:userId/role", protectRoute, switchRoleToAdmin);
 
 
 

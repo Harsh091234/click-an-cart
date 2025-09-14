@@ -422,3 +422,28 @@ export const setPassword = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error.", hasPassword: false });
   }
 };
+
+export const switchRoleToAdmin = async (req, res) => {
+  try {
+    const {role} = req.body;
+    if(role !== "admin" ){
+      return res.status(401).json({message: "Access denied! Admins Only."})
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
+      role
+    }, {
+      new: true
+    })
+    if(!updatedUser){
+      return res.status(404).json({message: "User not found"});
+    }
+    res.status(200).json(
+      updatedUser
+    )
+
+  } catch (err) {
+    console.error("Error switching role: ", err);
+    res.status(500).json({ message: err.message });
+  }
+};

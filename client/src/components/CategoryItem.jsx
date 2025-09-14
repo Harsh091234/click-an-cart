@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const CategoryItem = ({ category }) => {
   return (
-    <div className="relative  sm:h-76 h-60 w-[80%] sm:w-76 overflow-hidden group rounded-xl shadow-lg ">
+    <div className="relative  sm:h-76 h-60 w-full min-[351px]:w-80 sm:w-76 overflow-hidden group rounded-xl shadow-lg ">
       <Link to={`/category${category.href}`} className="block relative h-full w-full">
         <img
           src={category.imageUrl}

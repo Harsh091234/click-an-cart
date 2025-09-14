@@ -9,6 +9,7 @@ export const useUserStore = create((set, get) => ({
   resending: false,
   checkingAuth: true,
   validResetToken: null,
+  switchLoading: false,
 
   setClientId: async () => {
     try {
@@ -176,7 +177,7 @@ export const useUserStore = create((set, get) => ({
       const res = await axios.post("/auth/set-password", { password });
       console.log("res", res.data);
       set({
-        user: res.data,
+        user: res.data, loading: false
       });
       toast.success("Password set successfully");
       return res.data;
@@ -195,10 +196,10 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const res = await axios.post("/auth/refresh-token");
-const { accessToken } = res.data;
-axios.defaults.withCredentials = true;
+      const { accessToken } = res.data;
+      axios.defaults.withCredentials = true;
 
-set({ checkingAuth: false });
+      set({ checkingAuth: false });
 
       return res.data;
     } catch (error) {
@@ -206,6 +207,22 @@ set({ checkingAuth: false });
       throw error;
     }
   },
+  switchRole: async() => {
+      const { user } = get();
+    set({switchLoading: true})
+    try {
+      console.log("current user: ", user)
+      const res = await axios.post(`/auth/${user._id}/role`, {role: "admin"});
+      console.log("updated user: ", res.data);
+      set({user: res.data, switchLoading: false});
+      toast.success("Switched to admin");
+    } catch (error) {
+         set({ switchLoading: false });
+         console.error("Error switching to admin: ", error) 
+         toast.error("An error occurred while switching role");
+
+    }
+  }
 }));
 
 let refreshPromise = null;
