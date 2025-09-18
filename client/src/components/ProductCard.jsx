@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import { useCartStore } from "../store/useCartStore";
+import {useNavigate} from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const { user } = useUserStore();
   const [loading, setLoading] = useState(false);
   const {addToCart} = useCartStore();
 
   const handleAddToCart = async() => {  await addToCart(product);};
-
+  const handleClick = () => {
+    navigate(`/product/${product._id}`);
+  }
 
   return (
     <div className="bg-white rounded-xl w-full sm:w-[15rem] shadow-md p-2 flex flex-col items-center text-center hover:shadow-lg transition">
       {/* Product Image */}
-      <div className="h-60 sm:h-40 w-full flex items-center justify-center bg-sky-50 rounded-lg overflow-hidden">
+      <div onClick={handleClick} className="cursor-pointer h-60 sm:h-40 w-full flex items-center justify-center bg-sky-50 rounded-lg overflow-hidden">
         <img
           src={product.image}
           alt={product.name}

@@ -17,7 +17,7 @@ const CartPage = () => {
         </div>
   return (
    
-      <div className="bg-green-50 h-full flex flex-col md:flex-row  overflow-y-auto py-4 px-7 gap-3 md:gap-10">
+      <div className="bg-green-50 h-full flex flex-col md:flex-row  overflow-y-auto scrollbar-hide py-4 px-7 gap-3 md:gap-10">
 
     
         <div className=" w-[100%] md:w-[60%] flex flex-col gap-2  ">

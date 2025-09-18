@@ -19,6 +19,7 @@ import { useCartStore } from "./store/useCartStore";
 import CartPage from "./pages/CartPage";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 import PurchaseCancelPage from "./pages/PurchaseCancelPage";
+import ProductPage from "./pages/ProductPage";
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
@@ -182,6 +183,21 @@ const App = () => {
     user ? (
       user.isVerified ? (
         <PurchaseCancelPage />
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
+
+  <Route
+  path="/product/:id"
+  element={
+    user ? (
+      user.isVerified ? (
+        <ProductPage/>
       ) : (
         <Navigate to="/verify-email" />
       )

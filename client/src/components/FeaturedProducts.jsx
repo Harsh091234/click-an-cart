@@ -1,11 +1,12 @@
 import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "../store/useCartStore";
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FeaturedProducts = ({ featuredProducts }) => {
   const { addToCart } = useCartStore();
   const scrollRef = useRef(null);
-
+  const navigate = useNavigate();
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
 
@@ -39,6 +40,9 @@ const FeaturedProducts = ({ featuredProducts }) => {
     return () => el.removeEventListener("scroll", checkScrollPosition);
   }, []);
 
+    const handleClick = (id) => {
+    navigate(`/product/${id}`);
+  }
   return (
     <div className="relative w-full max-w-7xl mx-auto mt-14">
       <h1 className="text-3xl font-bold text-sky-500 text-center mb-4">
@@ -81,7 +85,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
           >
             <div className="bg-white rounded-xl shadow-md p-3 flex flex-col items-center">
               {/* Product Image */}
-              <div className="w-full h-40">
+              <div onClick={() =>handleClick(product._id)} className="w-full h-40 cursor-pointer">
                 <img
                   src={product.image}
                   alt={product.name}

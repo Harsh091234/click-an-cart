@@ -73,7 +73,7 @@ const ProductsList = () => {
       </div>
 
       {/* Desktop Layout (Table) */}
-      <div className="hidden md:block max-h-96 overflow-y-auto">
+      <div className="hidden md:block max-h-96 overflow-y-auto scrollbar-hide">
         <table className="w-full border-collapse">
           <thead className="bg-sky-100 text-sky-600 sticky top-0 z-10">
             <tr>
