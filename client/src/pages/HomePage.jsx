@@ -67,7 +67,12 @@ const HomePage = () => {
       
            <FeaturedProducts featuredProducts={products} />
      } 
-      <SwitchRoleButton />
+     { user.role !== 'admin' && (
+         <SwitchRoleButton />
+     )
+
+     }
+     
   
     
     </div>
