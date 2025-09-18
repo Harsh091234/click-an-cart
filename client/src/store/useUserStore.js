@@ -207,22 +207,43 @@ export const useUserStore = create((set, get) => ({
       throw error;
     }
   },
-  switchRole: async() => {
-      const { user } = get();
-    set({switchLoading: true})
-    try {
+  // switchToAdmin: async() => {
+  //     const { user } = get();
+  //   set({switchLoading: true})
+  //   try {
       
-      const res = await axios.post(`/auth/${user._id}/role`, {role: "admin"});
+  //     const res = await axios.post(`/auth/${user._id}/role`, {role: "admin"});
     
-      set({user: res.data, switchLoading: false});
-      toast.success("Switched to admin");
-    } catch (error) {
-         set({ switchLoading: false });
-         console.error("Error switching to admin: ", error) 
-         toast.error("An error occurred while switching role");
+  //     set({user: res.data, switchLoading: false});
+  //     toast.success("Switched to admin");
+  //   } catch (error) {
+  //        set({ switchLoading: false });
+  //        console.error("Error switching to admin: ", error) 
+  //        toast.error("An error occurred while switching role");
 
+  //   }
+  // },
+
+  toggleRole: async() => {
+    set({switchLoading: true})
+    try { 
+     
+       const res = await axios.put(
+      "/auth/toggle-role",
+      {},)
+  
+     set({ user: res.data, switchLoading: false })
+  
+     toast.success(`User switched to ${res.data.role}`)
+       
+      
+    } catch (error) {
+         console.error("Role toggle failed:", error);
+             set({ switchLoading: false });
+             toast.error(error.response.data.message || "Error switching role");
     }
   }
+
 }));
 
 let refreshPromise = null;

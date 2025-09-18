@@ -447,3 +447,23 @@ export const switchRoleToAdmin = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+export const toggleRole = async (req, res) => {
+  try {
+    const userId = req.user._id; 
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Toggle role
+    user.role = user.role === "buyer" ? "seller" : "buyer";
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

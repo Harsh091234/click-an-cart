@@ -6,6 +6,7 @@ import FeaturedProducts from "../components/FeaturedProducts";
 import { RefreshCw } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import { useNavigate } from "react-router-dom";
+import SwitchRoleButton from "../components/ui/SwitchRoleButton";
 
 const categories = [
   { href: "/jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
@@ -17,10 +18,10 @@ const categories = [
 ];
 
 const HomePage = () => {
-   const [hover, setHover] = useState(false);
+  
   const { loading, fetchFeaturedProducts,products } = useProductStore();
   const [delayedLoading, setDelayedLoading] = useState(true);
-  const {switchLoading, switchRole, user} = useUserStore();
+  const { user} = useUserStore();
   const navigate = useNavigate();
   useEffect(() => {
     let timer;
@@ -39,10 +40,7 @@ const HomePage = () => {
   	useEffect(() => {
 		fetchFeaturedProducts();
 	}, [fetchFeaturedProducts]);
-  const handleClick = async() => {
-      await switchRole();
-      navigate("/");
-  }
+ 
   return (
     <div className="h-full px-3 py-3  justify-center text-black overflow-y-auto w-full scrollbar-hide">
       <h1 className="mt-8 mb-3 text-center text-4xl font-bold text-sky-500">
@@ -69,27 +67,8 @@ const HomePage = () => {
       
            <FeaturedProducts featuredProducts={products} />
      } 
-     {
-    //  user.role !== "admin" &&     <button
-    //     onClick={handleClick}
-    //     onMouseEnter={() => setHover(true)}
-    //     onMouseLeave={() => setHover(false)}
-    //     className="absolute bottom-10 right-10 flex items-center justify-center rounded-full bg-sky-500 text-white 
-    //                hover:bg-white hover:text-sky-500 p-3 shadow-lg transition-all duration-300"
-    //   >
-    //     <RefreshCw size={17} />
-
-    //     {/* Hover label */}
-    //     {hover && (
-    //       <span
-    //         className="absolute bottom-0 right-15 bg-white text-sky-600 text-xs px-3 py-1 rounded-lg shadow-md
-    //                    transition-all duration-300 whitespace-nowrap"
-    //       >
-    //         Switch to Admin
-    //       </span>
-    //     )}
-    //   </button> 
-      }
+      <SwitchRoleButton />
+  
     
     </div>
   );
