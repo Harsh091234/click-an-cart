@@ -3,15 +3,25 @@ import { useParams } from "react-router-dom";
 import { useProductStore } from "../store/useProductStore";
 import { useCartStore } from "../store/useCartStore";
 import { Loader2, ShoppingCart } from "lucide-react";
+import { useUserStore } from "../store/useUserStore";
 const ProductPage = () => {
     const {products} = useProductStore();
       const [loading, setLoading] = useState(false);
+      const {user} = useUserStore();
     const {id} = useParams();
 const {addToCart} = useCartStore();
     const handleAddToCart = async() => {  await addToCart(product);};
+    let product = null;
+   
+     
+      
+   
+  
+          product = products.find((p)=> p._id === id);
+  
 
-
-    const product = products.find((p)=> p._id === id);
+ 
+  
     if(!product){
         return <div>Product not found</div>
     }
@@ -34,7 +44,7 @@ const {addToCart} = useCartStore();
         <p className= "text-xs  md:text-sm text-gray-500">In Stock: {product.stock}</p>
 
         {/* Add to Cart Button */}
-        <button
+        {user.role !== "seller" && <button
           onClick={handleAddToCart}
           disabled={loading}
           className="mt-2 mx-auto flex items-center gap-1.5 bg-sky-500 text-white px-4 text-xs md:text-sm py-1.5 rounded-lg hover:bg-sky-600 transition disabled:opacity-70 disabled:cursor-not-allowed"
@@ -50,7 +60,8 @@ const {addToCart} = useCartStore();
               Add to Cart
             </>
           )}
-        </button>
+        </button>}
+        
       </div>
     </div>
   );

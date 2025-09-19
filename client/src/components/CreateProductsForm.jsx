@@ -1,7 +1,7 @@
 import { Upload, CirclePlus, Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useProductStore } from "../store/useProductStore";
-
+import {useUserStore} from "../store/useUserStore";
 const categories = [
   "jeans",
   "t-shirts",
@@ -13,7 +13,8 @@ const categories = [
 ];
 
 const CreateProductsForm = () => {
-  const {loading, uploading, createProducts} = useProductStore();
+  const {loading, uploading, createProducts, createSellerProduct} = useProductStore();
+   const {user} = useUserStore();
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -35,8 +36,14 @@ const CreateProductsForm = () => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("product: ", newProduct)
-    await createProducts(newProduct);
+    console.log("user", user);
+    if(user && user.role === "seller"){
+      await createSellerProduct(newProduct);
+    }
+    else{
+       await createProducts(newProduct);
+    }
+   
     
     setNewProduct({ name: "", description: "", price: "", category: "", image: "" ,  stock: "",});
   };

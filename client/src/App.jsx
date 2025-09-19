@@ -20,6 +20,11 @@ import CartPage from "./pages/CartPage";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 import PurchaseCancelPage from "./pages/PurchaseCancelPage";
 import ProductPage from "./pages/ProductPage";
+import SellerHomePage from "./pages/SellerHomePage";
+import SellerCreateProductsPage from "./pages/SellerCreateProductsPage";
+import SellerProductsPage from "./pages/SellerProductsPage";
+import SellerProductPage from "./pages/SellerProductPage";
+
 const App = () => {
   const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
@@ -62,6 +67,50 @@ const App = () => {
                   )
                 }
               />
+              //seller route
+                <Route
+                path="/seller"
+                element={
+                  user ? (
+                    user.isVerified ? (
+                      <SellerHomePage />
+                    ) : (
+                      <Navigate to="/verify-email" />
+                    )
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+                <Route
+                path="/seller/create"
+                element={
+                  user ? (
+                    user.isVerified ? (
+                      <SellerCreateProductsPage />
+                    ) : (
+                      <Navigate to="/verify-email" />
+                    )
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+                <Route
+                path="/seller/products"
+                element={
+                  user ? (
+                    user.isVerified ? (
+                      <SellerProductsPage />
+                    ) : (
+                      <Navigate to="/verify-email" />
+                    )
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              
           <Route
   path="/secret-dashboard"
   element={
@@ -198,6 +247,20 @@ const App = () => {
     user ? (
       user.isVerified ? (
         <ProductPage/>
+      ) : (
+        <Navigate to="/verify-email" />
+      )
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
+  <Route
+  path="seller/product/:id"
+  element={
+    user ? (
+      user.isVerified ? (
+        <SellerProductPage/>
       ) : (
         <Navigate to="/verify-email" />
       )

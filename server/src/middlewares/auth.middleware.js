@@ -36,3 +36,21 @@ export async function adminRoute(req, res, next){
     return res.status(403).json({message: "Access denied - Admin only"});
   }
 }
+
+export async function rejectSeller(req, res, next){
+  if(req.user && (req.user.role === "buyer" || req.user.role === "admin")){
+    next();
+  }
+  else{
+    return res.status(403).json({message: "Access denied - Sellers not allowed"});
+  }
+}
+
+export async function sellerRoute(req, res, next){
+  if(req.user && req.user.role === "seller"){
+    next();
+  }
+  else{
+    return res.status(403).json({message: "Access denied - Sellers only"});
+  }
+}

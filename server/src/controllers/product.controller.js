@@ -52,7 +52,8 @@ export const createProduct = async(req, res) => {
       price,
       stock,
       image: cloudinaryResponse?.secure_url || "",
-      category
+      category,
+      author: req.user._id,
     })
     console.log("product: ", product);
     res.status(201).json(product);
@@ -65,6 +66,7 @@ export const createProduct = async(req, res) => {
     });
   }
 }
+
 
 export const deleteProduct = async(req, res) => {
   try {
@@ -119,6 +121,22 @@ export const getRecommendedProducts = async(req, res) => {
   }
 }
 
+export const showSellerProducts = async (req, res) => {
+  try {
+  
+  
+ 
+    const products = await Product.find({ author: req.user._id }).sort({ createdAt: -1 });
+    if(!products){
+      return res.status(404).json({message: "No products found for this seller"});
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching seller products:", error);
+    res.status(500).json({ message: "Server error. Could not fetch products." });
+  }
+};
 export const  getProductsByCategory = async(req, res) => {
   
   try {

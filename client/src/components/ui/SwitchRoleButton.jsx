@@ -9,7 +9,8 @@ const SwitchRoleButton = () => {
      const navigate = useNavigate();
      const handleClick = async() => {
       await toggleRole();
-      navigate("/");
+      if(user.role === "buyer") return navigate("/seller");
+     return navigate("/");
   }
 
   return (

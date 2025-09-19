@@ -2,11 +2,13 @@ import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "../store/useCartStore";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/useUserStore";
 
 const FeaturedProducts = ({ featuredProducts }) => {
   const { addToCart } = useCartStore();
   const scrollRef = useRef(null);
   const navigate = useNavigate();
+  const {user} = useUserStore();
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
 
@@ -102,13 +104,13 @@ const FeaturedProducts = ({ featuredProducts }) => {
               </p>
 
               {/* Add to Cart Button */}
-              <button
+              {user.role !== "seller" && <button
                 onClick={() => addToCart(product)}
                 className="mt-2 flex items-center gap-1 text-xs md:text-sm bg-sky-500 text-white px-3 py-1.5 rounded-md hover:bg-sky-600 transition"
               >
                 <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
                 Add
-              </button>
+              </button>} 
             </div>
           </div>
         ))}

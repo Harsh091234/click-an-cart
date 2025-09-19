@@ -12,6 +12,7 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async() => {  await addToCart(product);};
   const handleClick = () => {
+    if(user.role === "seller") return navigate(`/seller/product/${product._id}`);
     navigate(`/product/${product._id}`);
   }
 
@@ -31,7 +32,7 @@ const ProductCard = ({ product }) => {
       <span className="text-sky-500 font-bold text-xl ">${product.price}</span>
 
       {/* Add to Cart Button */}
-      <button
+      {user.role !== "seller" &&   <button
         onClick={handleAddToCart}
         disabled={loading}
         className="mt-2 flex text-sm items-center gap-1.5 bg-sky-500 text-white px-3 py-2 rounded-lg hover:bg-sky-600 transition disabled:opacity-70 disabled:cursor-not-allowed"
@@ -47,7 +48,8 @@ const ProductCard = ({ product }) => {
             Add to cart
           </>
         )}
-      </button>
+      </button>}
+    
     </div>
   );
 };

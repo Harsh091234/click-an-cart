@@ -29,7 +29,7 @@ const HomePage = () => {
       // Add a delay before hiding skeleton
       timer = setTimeout(() => {
         setDelayedLoading(false);
-      }, 1000); // delay of 1 second
+      }, 400); // delay of 1 second
     } else {
       setDelayedLoading(true);
     }
