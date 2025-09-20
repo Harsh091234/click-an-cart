@@ -58,7 +58,7 @@ const App = () => {
                 element={
                   user ? (
                     user.isVerified ? (
-                      <HomePage />
+                     user.role !== "seller"? <HomePage /> : <Navigate to="/seller"/>
                     ) : (
                       <Navigate to="/verify-email" />
                     )
@@ -67,13 +67,13 @@ const App = () => {
                   )
                 }
               />
-              //seller route
+              //seller root
                 <Route
                 path="/seller"
                 element={
                   user ? (
                     user.isVerified ? (
-                      <SellerHomePage />
+                        user.role === "seller"?<SellerHomePage /> : <Navigate to="/"/> 
                     ) : (
                       <Navigate to="/verify-email" />
                     )
@@ -87,7 +87,7 @@ const App = () => {
                 element={
                   user ? (
                     user.isVerified ? (
-                      <SellerCreateProductsPage />
+                       user.role === "seller"  ? <SellerCreateProductsPage />: <Navigate to="/"/> 
                     ) : (
                       <Navigate to="/verify-email" />
                     )
@@ -101,7 +101,7 @@ const App = () => {
                 element={
                   user ? (
                     user.isVerified ? (
-                      <SellerProductsPage />
+                       user.role === "seller"? <SellerProductsPage /> : <Navigate to="/"/> 
                     ) : (
                       <Navigate to="/verify-email" />
                     )
@@ -116,7 +116,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <AdminPage />
+       user.role !== "seller"? <AdminPage /> : <Navigate to="/seller"/> 
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -187,7 +187,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <CategoryPage />
+          user.role !== "seller"? <CategoryPage /> : <Navigate to="/seller"/> 
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -201,7 +201,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <CartPage />
+         user.role !== "seller"? <CartPage />: <Navigate to="/seller"/>  
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -216,7 +216,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <PurchaseSuccessPage />
+        user.role !== "seller"?<PurchaseSuccessPage />: <Navigate to="/seller"/>   
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -231,7 +231,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <PurchaseCancelPage />
+        user.role !== "seller"?  <PurchaseCancelPage />: <Navigate to="/seller"/>  
       ) : (
         <Navigate to="/verify-email" />
       )
@@ -260,7 +260,7 @@ const App = () => {
   element={
     user ? (
       user.isVerified ? (
-        <SellerProductPage/>
+         user.role === "seller"?   <SellerProductPage/>: <Navigate to="/"/>  
       ) : (
         <Navigate to="/verify-email" />
       )
