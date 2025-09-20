@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useCartStore } from "../store/useCartStore";
 import EmptyCart from "../components/EmptyCart";
 import CartItem from "../components/CartItem";
@@ -8,13 +8,19 @@ import GiftCouponCard from "../components/GiftCouponCard";
 import CartItemSkeleton from "../components/skeletons/CartItemSkeleton";
 import OrderSummarySkeleton from "../components/skeletons/OrderSummarySkeleton";
 import PeopleAlsoBoughtSkeleton from "../components/skeletons/PeopleAlsoBoughtSkeleton";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/useUserStore";
 
 const CartPage = () => {
+ 
   const { cart, loading } = useCartStore();
-
+  const {user} = useUserStore();
+ 
   if(cart.length === 0) return  <div className=" h-full w-full ">
           <EmptyCart />
         </div>
+
+
   return (
    
       <div className="bg-green-50 h-full flex flex-col md:flex-row  overflow-y-auto scrollbar-hide py-4 px-7 gap-3 md:gap-10">

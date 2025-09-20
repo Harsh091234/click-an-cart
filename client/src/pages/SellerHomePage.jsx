@@ -23,10 +23,10 @@ const SellerHomePage = () => {
 {/* Create Product Box */}
 <Link
   to="/seller/create"
-  className="relative w-full  h-78 sm:w-1/2 sm:max-w-sm  bg-gray-200 hover:bg-gray-50 rounded-lg flex justify-center items-center shadow-md overflow-hidden group transform transition duration-300 hover:scale-105 cursor-pointer"
+  className="relative w-full h-60 sm:h-78 sm:w-1/2 sm:max-w-sm  bg-gray-200 hover:bg-gray-50 rounded-lg flex justify-center items-center shadow-md overflow-hidden group transform transition duration-300 hover:scale-105 cursor-pointer"
 >
   {/* Icon */}
-  <PlusSquare strokeWidth={2} className="w-20 h-20 text-sky-500 opacity-50 group-hover:scale-110 transition-transform duration-300" />
+  <PlusSquare strokeWidth={2} className="w-15 h-15 sm:w-20 sm:h-20 text-sky-500 opacity-50 group-hover:scale-110 transition-transform duration-300" />
 
   {/* Text */}
   <h1 className="absolute bottom-5 left-5 text-xl font-semibold text-sky-500">
@@ -37,10 +37,10 @@ const SellerHomePage = () => {
 {/* View Products Box */}
 <Link
   to="/seller/products"
-  className="relative w-full  h-78 sm:w-1/2 sm:max-w-sm bg-gray-200 hover:bg-gray-50 rounded-lg flex justify-center items-center shadow-md overflow-hidden group transform transition duration-300 hover:scale-105 cursor-pointer"
+  className="relative w-full h-60 sm:h-78 sm:w-1/2 sm:max-w-sm bg-gray-200 hover:bg-gray-50 rounded-lg flex justify-center items-center shadow-md overflow-hidden group transform transition duration-300 hover:scale-105 cursor-pointer"
 >
   {/* Background Icon */}
-  <Boxes  strokeWidth={1.5} className="w-25 h-25  text-sky-500 opacity-50 group-hover:scale-110 transition-transform duration-300" />
+  <Boxes  strokeWidth={1.5} className="w-17 h-17 sm:w-20 sm:h-20  text-sky-500 opacity-50 group-hover:scale-110 transition-transform duration-300" />
 
   {/* Text */}
   <h1 className="absolute bottom-5 left-5 text-xl font-semibold text-sky-500">

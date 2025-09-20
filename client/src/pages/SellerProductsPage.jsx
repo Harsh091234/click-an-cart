@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useProductStore } from "../store/useProductStore";
 import ProductCard from "../components/ProductCard";
+import ProductCardSkeleton from "../components/skeletons/ProductCardSkeleton";
 
 const SellerProductsPage = () => {
   const { fetchSellerProducts, sellerProducts, loading } = useProductStore();
@@ -15,7 +16,7 @@ const SellerProductsPage = () => {
       <h1 className="text-2xl font-bold mb-6">Your Products</h1>
 
       {/* Loader */}
-      {loading && <p className="text-gray-500">Loading your products...</p>}
+      {loading && <ProductCardSkeleton />}
 
       {/* No Products */}
       {!loading && sellerProducts?.length === 0 && (
