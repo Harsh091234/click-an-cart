@@ -35,13 +35,13 @@ const setCookies = (res, refreshToken, accessToken) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
@@ -58,7 +58,7 @@ export const googleAuth = async (req, res) => {
     const response = await axios.get(
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
     );
-
+    if(!response) return res.status(400).json
     const { email, name } = response.data;
 
     let user = await User.findOne({ email });
