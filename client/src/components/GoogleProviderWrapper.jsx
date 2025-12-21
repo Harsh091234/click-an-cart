@@ -4,11 +4,9 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useUserStore } from "../../../client/src/store/useUserStore";
 
 export default function GoogleProviderWrapper({ children }) {
-  const {clientId, setClientId} = useUserStore();
+ 
 
-  useEffect(() => {
-    setClientId();
-  }, []);
+  
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

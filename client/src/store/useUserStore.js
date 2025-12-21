@@ -4,22 +4,14 @@ import axios from "../utils/axios";
 
 export const useUserStore = create((set, get) => ({
   user: null,
-  clientId: null,
+ 
   loading: false,
   resending: false,
   checkingAuth: true,
   validResetToken: null,
   switchLoading: false,
 
-  setClientId: async () => {
-    try {
-      const res = await axios.get("/auth/google/client-id");
-      set({ clientId: res.data.clientId });
-    } catch (err) {
-      console.error("Failed to load Google Client ID", err);
-      return toast.error("Failed to load Google Client ID");
-    }
-  },
+  
   googleLogin: async (access_token) => {
     set({ loading: true });
     try {

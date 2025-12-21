@@ -5,6 +5,7 @@ import User from "../models/user.model.js"
 export async function protectRoute(req, res, next) {
   try {
       const accessToken = req.cookies.accessToken;
+      console.log("acc",accessToken)
       if(!accessToken){
           return  res.status(401).json({message: "Uauthorized= No access token provied"})
       }
