@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const GoogleLoginButton = ({styles, imageStyles, textStyles}) => {
   const navigate = useNavigate();  
   const { googleLogin,} = useUserStore();
-     const loginWithGoogle = useGoogleLogin({
+    const loginWithGoogle = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       if (credentialResponse?.access_token) {
         // Send access_token to backend
@@ -25,8 +25,8 @@ const GoogleLoginButton = ({styles, imageStyles, textStyles}) => {
 
   return (
     <button
-            onClick={loginWithGoogle}
-           className={styles}
+          onClick={loginWithGoogle}
+          className={styles}
           >
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"

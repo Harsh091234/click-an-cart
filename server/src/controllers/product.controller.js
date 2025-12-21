@@ -128,7 +128,7 @@ export const showSellerProducts = async (req, res) => {
  
     const products = await Product.find({ author: req.user._id }).sort({ createdAt: -1 });
     if(!products){
-      return res.status(404).json({message: "No products found for this seller"});
+      return res.status(200).json({message: "No products found for this seller"});
     }
 
     res.status(200).json(products);

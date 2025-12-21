@@ -11,7 +11,7 @@ export default function GoogleProviderWrapper({ children }) {
   }, []);
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       {children}
     </GoogleOAuthProvider>
   );
