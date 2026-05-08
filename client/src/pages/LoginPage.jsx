@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
-import { GoogleLogin } from "@react-oauth/google";
-import GoogleLoginButton from "../components/ui/GoogleLoginButton";
+// import { GoogleLogin } from "@react-oauth/google";
+// import GoogleLoginButton from "../components/ui/GoogleLoginButton";
 
 const LoginPage = () => {
   const { login, loading } = useUserStore();
@@ -120,18 +120,18 @@ const LoginPage = () => {
 
 
       {/* Divider */}
-      <div className="flex items-center w-full  gap-2  my-1 md:my-2.5">
+      {/* <div className="flex items-center w-full  gap-2  my-1 md:my-2.5">
         <div className="flex-grow h-[1px] bg-gray-200"></div>
         <span className="text-gray-500 text-xs font-medium">or</span>
         <div className="flex-grow h-[1px] bg-gray-200"></div>
-      </div>
+      </div> */}
 
       {/* Google Login Button */}
-      <GoogleLoginButton
+      {/* <GoogleLoginButton
         styles={
           "flex items-center gap-3 justify-center text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
         } imageStyles={"h-4 w-4"} 
-      />
+      /> */}
 
       {/* Signup Link */}
       <div className="text-xs flex justify-center gap-1 mt-2 md:mt-3 md:text-sm lg:text-[0.7rem] w-full">

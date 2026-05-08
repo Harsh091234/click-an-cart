@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { LogOut, Lock, Star, Menu, ShoppingCart, Home } from "lucide-react";
+import { useState } from "react";
+import { LogOut, Lock,  Menu, ShoppingCart, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
-import { useNavigate } from "react-router-dom";
+
 import GoogleLoginButton from "./ui/GoogleLoginButton";
 import { useCartStore } from "../store/useCartStore";
 
 const Navbar = () => {
-  const navigate = useNavigate();
+
   const { logout, user } = useUserStore();
   const { cart } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -181,11 +181,12 @@ const Navbar = () => {
           </div>
         </div>
       ) : (
-        <GoogleLoginButton
-          styles="flex gap-2 items-center text-sky-600 font-semibold bg-white px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition text-xs"
-          textStyles="hidden sm:inline"
-          imageStyles="h-4 w-4"
-        />
+        <></>
+        // <GoogleLoginButton
+        //   styles="flex gap-2 items-center text-sky-600 font-semibold bg-white px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition text-xs"
+        //   textStyles="hidden sm:inline"
+        //   imageStyles="h-4 w-4"
+        // />
       )}
     </nav>
   );

@@ -36,7 +36,7 @@ const CreateProductsForm = () => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("user", user);
+   
     if(user && user.role === "seller"){
       await createSellerProduct(newProduct);
     }

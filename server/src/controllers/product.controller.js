@@ -32,7 +32,7 @@ export const getfeaturedProducts = async(req, res) => {
     await redis.set(
       "click-an-cart:featured_products",
       JSON.stringify(featuredProducts),{
-        ex: 300
+        ex: 150
       }
     );
   

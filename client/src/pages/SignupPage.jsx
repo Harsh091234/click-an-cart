@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import {motion} from "motion/react"
-import {Lock, Mail, User2, UserPlus, ArrowRight, Loader, Eye, EyeOff, User} from "lucide-react"
+
+import {Lock, Mail,  UserPlus, ArrowRight, Loader, Eye, EyeOff, User} from "lucide-react"
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserStore } from '../store/useUserStore'
 import GoogleLoginButton from '../components/ui/GoogleLoginButton'
+import { useState } from "react"
 
 const SignupPage = () => {
   const {signup, loading}  = useUserStore();
@@ -15,7 +15,7 @@ const SignupPage = () => {
 		confirmPassword: "",
 	});
     const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+ 
 
   const handleSubmit = async(e) => {
       e.preventDefault();
@@ -139,7 +139,7 @@ const SignupPage = () => {
 
 
       {/* Divider */}
-      <div className="flex items-center w-full gap-2 my-1 md:my-2.5
+      {/* <div className="flex items-center w-full gap-2 my-1 md:my-2.5
       
       
       ">
@@ -147,14 +147,14 @@ const SignupPage = () => {
       <div className="flex-grow h-[1px] bg-gray-200"></div>
         <span className="text-gray-500 text-xs font-medium">or</span>
         <div className="flex-grow h-[1px] bg-gray-200"></div>
-      </div>
+      </div> */}
 
       {/* Google Login Button */}
-      <GoogleLoginButton
+      {/* <GoogleLoginButton
         styles={
           "flex items-center gap-3 justify-center text-sky-600 font-medium bg-white border border-gray-300 px-4 py-2 rounded-md shadow-sm hover:bg-sky-50 hover:border-sky-400 hover:shadow-md transition text-xs" 
         } imageStyles={"h-4 w-4"}
-      />
+      /> */}
 
       {/* Signup Link */}
       <div className="text-xs flex justify-center gap-1 mt-2 md:mt-3 md:text-sm lg:text-[0.7rem] w-full">
