@@ -91,7 +91,7 @@ const demoProducts = [
   {
     name: "Formal Navy Suit",
     image:
-      "https://images.unsplash.com/photo-1593032465171-8bd0b2b2c1cb?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1593621224867-e17cbc70dc2d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmF2eSUyMHN1aXR8ZW58MHwyfDB8fHww",
     description: "Elegant formal suit for events.",
     price: "7999",
     stock: "6",

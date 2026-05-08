@@ -51,6 +51,7 @@ export const createProduct = async(req, res) => {
     if(image){
       cloudinaryResponse = await cloudinary.uploader.upload(image, {folder: "products"});
     }
+
     const product = await Product.create({
       name, 
       description,
@@ -176,7 +177,9 @@ export const toggleFeaturedProduct = async(req, res) => {
 const updateFeaturedProductsCache = async() => {
   try {
     const featuredProducts = await Product.find({isFeatured: true}).lean();
-    await redis.set("featured_products", JSON.stringify(featuredProducts));
+    await redis.set("click-an-card:featured_products", JSON.stringify(featuredProducts), {
+      ex: 150
+    });
   } catch (error) {
       console.error("Error in updateFeaturedProductsCache:", error.message);
   }
