@@ -19,17 +19,22 @@ export const getAllProducts = async (req, res) => {
 
 export const getfeaturedProducts = async(req, res) => {
   try {
-    let featuredProducts = await redis.get("featured_products");
+    let featuredProducts = await redis.get("click-an-cart:featured_products");
     if(featuredProducts){
-      return res.json(JSON.parse(featuredProducts));
+      return res.json(featuredProducts);
     }
   
     featuredProducts = await Product.find({isFeatured: true}).lean();
     if(!featuredProducts){
-      return res.status(404).json({message: "No featured products found"});
+      return res.status(200).json([]);
     }
   
-    await redis.set("featured_products", JSON.stringify(featuredProducts));
+    await redis.set(
+      "click-an-cart:featured_products",
+      JSON.stringify(featuredProducts),{
+        ex: 300
+      }
+    );
   
     res.json(featuredProducts);
   } catch (error) {
@@ -55,7 +60,7 @@ export const createProduct = async(req, res) => {
       category,
       author: req.user._id,
     })
-    console.log("product: ", product);
+   
     res.status(201).json(product);
 
   } catch (error) {
@@ -79,7 +84,7 @@ export const deleteProduct = async(req, res) => {
 
       try {
         await cloudinary.uploader.destroy("/").pop().split(".")[0];
-        console.log("deleted image from cloudinary");
+       
       } catch (error) {
         console.log("error deleting image from cloudinary", error)
       }
@@ -141,7 +146,7 @@ export const  getProductsByCategory = async(req, res) => {
   
   try {
     const {category} = req.params;
-    console.log("category:", category)
+   
     const products = await Product.find({category});
     res.json({products});
   } catch (error) {

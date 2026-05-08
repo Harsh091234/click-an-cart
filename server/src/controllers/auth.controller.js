@@ -24,10 +24,10 @@ const generateTokens = (userId) => {
 
 const storeRefreshToken = async (userId, refreshToken) => {
   await redis.set(
-    `refresh_token: ${userId}`,
+    `click-an-cart:refresh_token: ${userId}`,
     refreshToken,
-    "EX",
-    7 * 24 * 60 * 60
+    {EX: 
+    7 * 24 * 60 * 60}
   );
 };
 
@@ -149,7 +149,7 @@ export const verifyEmail = async (req, res) => {
       verificationCode: code,
       verificationCodeExpiresAt: { $gt: Date.now() },
     });
-    console.log(`user: ${user}`);
+  
     if (!user) {
       return res
         .status(400)
@@ -181,9 +181,9 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    console.log("user", user);
+
     if (user && (await user.comparePassword(password))) {
-      console.log("hi1");
+     
       const { accessToken, refreshToken } = generateTokens(user._id);
       await storeRefreshToken(user._id, refreshToken);
       setCookies(res, refreshToken, accessToken);
@@ -315,8 +315,7 @@ export const resetPassword = async (req, res) => {
   try {
     const { code } = req.params;
     const { newPassword } = req.body;
-    console.log("code:", code);
-    console.log("password:", newPassword)
+  
     const user = await User.findOne({
       resetPasswordCode: code,
       resetPasswordCodeExpiresAt: { $gt: Date.now() },

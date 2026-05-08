@@ -1,8 +1,12 @@
-import Redis from "ioredis"
+import { Redis } from "@upstash/redis";
 import dotenv from "dotenv"
-
 dotenv.config();
+export const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL,
+  token: process.env.UPSTASH_REDIS_TOKEN,
+});
 
-export const redis = new Redis(process.env.UPSTASH_REDIS_URL);
-
-await redis.set('goo', 'bar');
+await redis.set("foo", "bar", {
+  ex: 120
+});
+await redis.get("foo");

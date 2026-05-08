@@ -112,7 +112,7 @@ export const checkoutSuccess = async (req, res) => {
       return res.status(404).json({ message: "Session not found" });
     }
 
-    console.log("Stripe session metadata:", session.metadata);
+  
 
     // ✅ Accept both paid and free sessions
     if (
