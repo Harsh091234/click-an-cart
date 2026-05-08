@@ -71,17 +71,11 @@ A full-stack ecommerce app for clothing with authentication, cart, coupons, secu
    cd click-an-cart
    ```
 
-2. **Backend Setup**
+2. **Build project**
    ```bash
-   cd server
-   npm install
+    npm run build
    ```
 
-3. **Frontend Setup**
-   ```bash
-   cd client
-   npm install
-   ```
 
    ### 🔧 Environment Variables Setup
 
