@@ -1,0 +1,16 @@
+{
+  "name": "@repo/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    }
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}

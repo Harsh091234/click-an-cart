@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+
 import { ArrowRight, Loader, Lock, Eye, EyeOff } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import { useNavigate } from "react-router-dom";

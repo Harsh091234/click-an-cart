@@ -2,6 +2,8 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../utils/redis.js";
 import client from "../utils/googleClient.js";
+import {ApiError} from "../utils/ApiError.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
 import axios from "axios";
 import { randomInt } from "crypto";
 import {
@@ -10,26 +12,35 @@ import {
   sendPasswordResetSuccessEmail,
   sendPasswordResetEmail,
 } from "../utils/mailing/email.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "1d",
-  });
-  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d",
-  });
 
-  return { accessToken, refreshToken };
+
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    console.log("user", userId)
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    console.error(error); // 👈 Log the original error
+    throw new ApiError(
+      500,
+      "Something went wrong while generating refresh and access token",
+    );
+  }
 };
 
-const storeRefreshToken = async (userId, refreshToken) => {
-  await redis.set(
-    `click-an-cart:refresh_token: ${userId}`,
-    refreshToken,
-    {EX: 
-    7 * 24 * 60 * 60}
-  );
-};
+
+
 
 const setCookies = (res, refreshToken, accessToken) => {
   res.cookie("accessToken", accessToken, {
@@ -95,13 +106,15 @@ export const googleAuth = async (req, res) => {
   }
 };
 
-export const register = async (req, res) => {
+export const register =  asyncHandler(async(req, res) => {
   const { email, password, name } = req.body;
-  try {
+  
+    console.log("hi")
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      throw new ApiError(400, "User already exists")
+  
     }
    const verificationCode = randomInt(0, 1000000)
   .toString()
@@ -116,31 +129,27 @@ export const register = async (req, res) => {
       verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    const { refreshToken, accessToken } = generateTokens(user._id);
-    await storeRefreshToken(user._id, refreshToken);
-    setCookies(res, refreshToken, accessToken);
-
-    await sendVerificationEmail(user.email, verificationCode);
-
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-    });
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      console.log("Error in signup controller", error.message);
-      const messages = Object.values(error.errors).map((err) => err.message);
-      return res.status(400).json({ message: messages[0] });
+    const createdUser = await User.findById(user._id).select("-password")
+    if(!createdUser){
+      throw new ApiError(401, "User creation failed")
     }
 
-    console.log("Error in signup controller", error.message);
+    const {accessToken, refreshToken} = generateAccessAndRefreshTokens(createdUser._id.toString());
+    
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true
+    }
+    
 
-    res.status(500).json({ message: error.message });
-  }
-};
+    await sendVerificationEmail(createdUser.email, verificationCode);
+
+    return res
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .status(201).json(new ApiResponse(201, createdUser, "User registered successfully"))
+  
+}) 
 
 export const verifyEmail = async (req, res) => {
   try {

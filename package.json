@@ -1,26 +1,15 @@
 {
-  "name": "click-and-cart",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "click-n-cart",
+  "private": true,
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
-    "start": "npm run start --prefix server"
-    
+    "dev": "turbo run dev",
+    "build": "turbo run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Harsh091234/click-an-cart.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Harsh091234/click-an-cart/issues"
-  },
-  "homepage": "https://github.com/Harsh091234/click-an-cart#readme",
   "devDependencies": {
-    "cross-env": "^10.1.0"
+    "turbo": "^2.9.17"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
   }
 }
