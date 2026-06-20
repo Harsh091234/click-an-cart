@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
+
 import {
   Lock,
   Mail,
@@ -9,23 +10,27 @@ import {
   EyeOff,
   LogIn,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 // import { GoogleLogin } from "@react-oauth/google";
 // import GoogleLoginButton from "../components/ui/GoogleLoginButton";
 
 const LoginPage = () => {
-  const { login, loading } = useUserStore();
+  const navigate = useNavigate()
+  const { login,  loading } = useUserStore();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    login(formData);
+    const success  = await login(formData);
+   if (success)  return navigate("/")
+    
+    
   };
 
   return (

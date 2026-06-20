@@ -4,14 +4,13 @@ import axios from "../utils/axios";
 
 export const useUserStore = create((set, get) => ({
   user: null,
- 
+
   loading: false,
   resending: false,
   checkingAuth: true,
   validResetToken: null,
   switchLoading: false,
 
-  
   googleLogin: async (access_token) => {
     set({ loading: true });
     try {
@@ -21,7 +20,7 @@ export const useUserStore = create((set, get) => ({
       toast.success(
         res.data.isVerified
           ? "User logged in successfully"
-          : "Verification required. Check your email!"
+          : "Verification required. Check your email!",
       );
       return res.data;
     } catch (err) {
@@ -39,14 +38,15 @@ export const useUserStore = create((set, get) => ({
 
     try {
       const res = await axios.post("/auth/register", { name, email, password });
-    
+
       set({ user: res.data, loading: false });
       toast.success("User created successfully");
       return true;
     } catch (error) {
       set({ loading: false });
       toast.error(
-        error.response.data.message || "Something went wrong. Please try again."
+        error.response.data.message ||
+          "Something went wrong. Please try again.",
       );
     }
   },
@@ -54,7 +54,7 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.post("/auth/verify-email", { code });
-      
+
       set({ loading: false, user: res.data });
 
       toast.success("Email verified successfully");
@@ -63,7 +63,8 @@ export const useUserStore = create((set, get) => ({
       set({ loading: false });
       console.error("Error in verifyEmail", error);
       toast.error(
-        error.response.data.message || "Something went wrong. Please try again."
+        error.response.data.message ||
+          "Something went wrong. Please try again.",
       );
     }
   },
@@ -74,10 +75,12 @@ export const useUserStore = create((set, get) => ({
       const res = await axios.post("/auth/login", { email, password });
       set({ user: res.data, loading: false });
       toast.success("User authenticated successfully");
+      return true;
     } catch (error) {
       set({ loading: false });
       toast.error(
-        error.response.data.message || "Something went wrong. Please try again."
+        error.response.data.message ||
+          "Something went wrong. Please try again.",
       );
     }
   },
@@ -85,13 +88,14 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const res = await axios.get("/auth/profile");
-   
+    
       set({ user: res.data, checkingAuth: false });
+  
     } catch (error) {
       set({ user: null, checkingAuth: false });
       console.error(
         "Auth check failed:",
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
   },
@@ -167,9 +171,10 @@ export const useUserStore = create((set, get) => ({
       set({ loading: true });
 
       const res = await axios.post("/auth/set-password", { password });
-     
+
       set({
-        user: res.data, loading: false
+        user: res.data,
+        loading: false,
       });
       toast.success("Password set successfully");
       return res.data;
@@ -203,39 +208,33 @@ export const useUserStore = create((set, get) => ({
   //     const { user } = get();
   //   set({switchLoading: true})
   //   try {
-      
+
   //     const res = await axios.post(`/auth/${user._id}/role`, {role: "admin"});
-    
+
   //     set({user: res.data, switchLoading: false});
   //     toast.success("Switched to admin");
   //   } catch (error) {
   //        set({ switchLoading: false });
-  //        console.error("Error switching to admin: ", error) 
+  //        console.error("Error switching to admin: ", error)
   //        toast.error("An error occurred while switching role");
 
   //   }
   // },
 
-  toggleRole: async() => {
-    set({switchLoading: true})
-    try { 
-     
-       const res = await axios.put(
-      "/auth/toggle-role",
-      {},)
-  
-     set({ user: res.data, switchLoading: false })
-  
-     toast.success(`User switched to ${res.data.role}`)
-       
-      
-    } catch (error) {
-         console.error("Role toggle failed:", error);
-             set({ switchLoading: false });
-             toast.error(error.response.data.message || "Error switching role");
-    }
-  }
+  toggleRole: async () => {
+    set({ switchLoading: true });
+    try {
+      const res = await axios.put("/auth/toggle-role", {});
 
+      set({ user: res.data, switchLoading: false });
+
+      toast.success(`User switched to ${res.data.role}`);
+    } catch (error) {
+      console.error("Role toggle failed:", error);
+      set({ switchLoading: false });
+      toast.error(error.response.data.message || "Error switching role");
+    }
+  },
 }));
 
 let refreshPromise = null;
@@ -265,5 +264,5 @@ axios.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );

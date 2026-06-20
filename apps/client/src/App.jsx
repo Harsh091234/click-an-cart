@@ -24,260 +24,196 @@ import SellerHomePage from "./pages/SellerHomePage";
 import SellerCreateProductsPage from "./pages/SellerCreateProductsPage";
 import SellerProductsPage from "./pages/SellerProductsPage";
 import SellerProductPage from "./pages/SellerProductPage";
+import ProtectedRoute from "./routes/ProtectedRoutes";
+import PublicOnlyRoutes from "./routes/PublicOnlyRoutes";
+import SellerOnlyRoutes from "./routes/SellerOnlyRoutes";
+import BuyerOnlyRoutes from "./routes/BuyerOnlyRoutes";
+import AdminOnlyRoutes from "./routes/AdminOnlyRoutes";
 
 const App = () => {
-  const { user, checkAuth, checkingAuth, hasPassword } = useUserStore();
+  const { user, checkAuth, checkingAuth } = useUserStore();
   const [delayDone, setDelayDone] = useState(false);
-  const {getCartItems} = useCartStore();
+  const { getCartItems } = useCartStore();
 
   useEffect(() => {
     checkAuth();
-
-    const timer = setTimeout(() => setDelayDone(true), 1500);
-    return () => clearTimeout(timer);
+    console.log("auth user", user);
   }, [checkAuth]);
 
   useEffect(() => {
-    if(!user) return;
-    getCartItems()
-  }, [getCartItems, user])
+    console.log("user");
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getCartItems();
+  }, [getCartItems, user]);
+  if (checkingAuth)
+    return (
+      <div className="h-screen">
+        {" "}
+        <LoadingUi />
+      </div>
+    );
   return (
     <div className="h-screen bg-base-300  text-black relative  flex flex-col">
-    
+      <div className="relative z-50 h-full flex flex-col overflow-hidden">
+        <Navbar />
+        <div className="flex-1  overflow-hidden">
+          <Routes>
+            {/* Root route */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <BuyerOnlyRoutes>
+                    <HomePage />
+                  </BuyerOnlyRoutes>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicOnlyRoutes>
+                  <SignupPage />
+                </PublicOnlyRoutes>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicOnlyRoutes>
+                  <LoginPage />
+                </PublicOnlyRoutes>
+              }
+            />
+            <Route
+              path="/set-password"
+              element={
+                <ProtectedRoute>
+                  <SetPasswordPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            //seller root
+            <Route
+              path="/seller"
+              element={
+                <ProtectedRoute>
+                  <SellerOnlyRoutes>
+                    {" "}
+                    <SellerHomePage />
+                  </SellerOnlyRoutes>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller/create"
+              element={
+                <ProtectedRoute>
+                  <SellerOnlyRoutes>
+                    <SellerCreateProductsPage />
+                  </SellerOnlyRoutes>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller/products"
+              element={
+                <ProtectedRoute>
+                  <SellerOnlyRoutes>
+                    <SellerProductsPage />
+                  </SellerOnlyRoutes>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="seller/product/:id"
+              element={
+                <ProtectedRoute>
+                  <SellerOnlyRoutes>
+                    <SellerProductPage />
+                  </SellerOnlyRoutes>
+                </ProtectedRoute>
+              }
+            />
+            // buyer route
+            <Route
+              path="/category/:category"
+              element={
+               <ProtectedRoute>
+                <BuyerOnlyRoutes>
+                  <CategoryPage />
+                </BuyerOnlyRoutes>
+               </ProtectedRoute>
+              }
+            />
 
-      {checkingAuth || !delayDone ? (
-        <LoadingUi />
-      ) : (
-        <div className="relative z-50 h-full flex flex-col overflow-hidden">
-          <Navbar />
-          <div className="flex-1  overflow-hidden">
-            <Routes>
-              {/* Root route */}
+
               <Route
-                path="/"
+                path="/cart"
                 element={
-                  user ? (
-                    user.isVerified ? (
-                     user.role !== "seller"? <HomePage /> : <Navigate to="/seller"/>
-                    ) : (
-                      <Navigate to="/verify-email" />
-                    )
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                    <ProtectedRoute>
+                <BuyerOnlyRoutes>
+                  <CartPage />
+                </BuyerOnlyRoutes>
+               </ProtectedRoute>
                 }
               />
-              //seller root
-                <Route
-                path="/seller"
-                element={
-                  user ? (
-                    user.isVerified ? (
-                        user.role === "seller"?<SellerHomePage /> : <Navigate to="/"/> 
-                    ) : (
-                      <Navigate to="/verify-email" />
-                    )
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+              <Route
+                path="/purchase-success"
+                element={  <ProtectedRoute>
+                <BuyerOnlyRoutes>
+                  <PurchaseSuccessPage />
+                </BuyerOnlyRoutes>
+               </ProtectedRoute>}
               />
-                <Route
-                path="/seller/create"
-                element={
-                  user ? (
-                    user.isVerified ? (
-                       user.role === "seller"  ? <SellerCreateProductsPage />: <Navigate to="/"/> 
-                    ) : (
-                      <Navigate to="/verify-email" />
-                    )
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+              <Route
+                path="/purchase-cancel"
+                element={  <ProtectedRoute>
+                <BuyerOnlyRoutes>
+                  <PurchaseCancelPage />
+                </BuyerOnlyRoutes>
+               </ProtectedRoute>}
               />
-                <Route
-                path="/seller/products"
-                element={
-                  user ? (
-                    user.isVerified ? (
-                       user.role === "seller"? <SellerProductsPage /> : <Navigate to="/"/> 
-                    ) : (
-                      <Navigate to="/verify-email" />
-                    )
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              
-          <Route
-  path="/secret-dashboard"
-  element={
-    user ? (
-      user.isVerified ? (
-       user.role !== "seller"? <AdminPage /> : <Navigate to="/seller"/> 
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-
-
+           
+              <Route
+                path="/product/:id"
+                element={  <ProtectedRoute>
+                <BuyerOnlyRoutes>
+                  <ProductPage />
+                </BuyerOnlyRoutes>
+               </ProtectedRoute>}
+               />
 
           
+             
               <Route
-                path="/signup"
-                element={!user ? <SignupPage /> : <Navigate to="/" />}
-              />
-
-              <Route
-                path="/login"
-                element={!user ? <LoginPage /> : <Navigate to="/" />}
-              />
-
-              <Route
-                path="/verify-email"
+                path="/secret-dashboard"
                 element={
-                  user ? (
-                    !user.isVerified ? (
-                      <VerifyEmailPage />
-                    ) : (
-                      <Navigate to="/" />
-                    )
-                  ) : (
-                    <Navigate to="/signup" />
-                  )
+                 <ProtectedRoute>
+                  <AdminOnlyRoutes>
+                    <AdminPage />
+                  </AdminOnlyRoutes>
+                 </ProtectedRoute>
                 }
               />
-
-              <Route
-                path="/set-password"
-                element={
-                  user ? (
-                    !user.hasPassword ? (
-                      <SetPasswordPage />
-                    ) : (
-                      <Navigate to="/" />
-                    )
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
+             
             
-              <Route
-                path="/forgot-password"
-                element={
-                   <ForgotPasswordPage />
-                }
-              />
-              <Route
-                path="/reset-password/:token"
-                element={
-              <ResetPasswordPage />
-                }
-              />
-              <Route
-  path="/category/:category"
-  element={
-    user ? (
-      user.isVerified ? (
-          user.role !== "seller"? <CategoryPage /> : <Navigate to="/seller"/> 
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-  <Route
-  path="/cart"
-  element={
-    user ? (
-      user.isVerified ? (
-         user.role !== "seller"? <CartPage />: <Navigate to="/seller"/>  
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-
-  <Route
-  path="/purchase-success"
-  element={
-    user ? (
-      user.isVerified ? (
-        user.role !== "seller"?<PurchaseSuccessPage />: <Navigate to="/seller"/>   
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-
-  <Route
-  path="/purchase-cancel"
-  element={
-    user ? (
-      user.isVerified ? (
-        user.role !== "seller"?  <PurchaseCancelPage />: <Navigate to="/seller"/>  
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-
-  <Route
-  path="/product/:id"
-  element={
-    user ? (
-      user.isVerified ? (
-        <ProductPage/>
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-  <Route
-  path="seller/product/:id"
-  element={
-    user ? (
-      user.isVerified ? (
-         user.role === "seller"?   <SellerProductPage/>: <Navigate to="/"/>  
-      ) : (
-        <Navigate to="/verify-email" />
-      )
-    ) : (
-      <Navigate to="/login" />
-    )
-  }
-/>
-           
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </div>
+          
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </div>
-      )}
+      </div>
     </div>
-
-
   );
 };
 

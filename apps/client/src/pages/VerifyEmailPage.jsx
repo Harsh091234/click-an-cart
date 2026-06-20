@@ -37,11 +37,7 @@ const VerifyEmailPage = () => {
     const code = otp.join("");
     const success = await verifyEmail(code);
 
-    if (success.authProvider === "google") {
-      navigate("/set-password");
-    } else {
-      navigate("/");
-    }
+    if(success) return  navigate("/")
   };
 
   return (

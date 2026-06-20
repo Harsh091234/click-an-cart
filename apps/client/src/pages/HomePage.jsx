@@ -22,7 +22,7 @@ const HomePage = () => {
   const { loading, fetchFeaturedProducts,products } = useProductStore();
   const [delayedLoading, setDelayedLoading] = useState(true);
   const { user} = useUserStore();
-  const navigate = useNavigate();
+  
   useEffect(() => {
     let timer;
     if (!loading) {
@@ -56,7 +56,7 @@ const HomePage = () => {
           ? Array.from({ length: 6 }).map((_, idx) => (
               <CategoryItemSkeleton key={idx} />
             ))
-          : categories.map((category) => (
+          : categories?.map((category) => (
               <CategoryItem key={category.name} category={category} />
             ))}
         </div>
