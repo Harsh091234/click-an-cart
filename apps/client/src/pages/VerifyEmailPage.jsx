@@ -1,120 +1,185 @@
-import React, { useRef, useState } from "react";
-import { ArrowLeft, Loader } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Loader, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { VerifyEmailSchema } from "@repo/shared";
 import { useUserStore } from "../store/useUserStore";
+import toast from "react-hot-toast";
 
 const VerifyEmailPage = () => {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const inputRefs = useRef([]);
   const navigate = useNavigate();
-  const { verifyEmail, resendVerificationCode, resending, user, loading } = useUserStore();
+  const inputRefs = useRef([]);
 
-  const handleChange = (value, index) => {
-    if (/^[0-9]?$/.test(value)) {
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
+  const { verifyEmail, resendVerificationCode, resending, user, loading } =
+    useUserStore();
 
-      if (value && index < otp.length - 1) {
-        inputRefs.current[index + 1].focus();
-      }
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(VerifyEmailSchema),
+   
+  });
 
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1].focus();
+  const code = watch("code") || "";
+
+  useEffect(() => {
+    register("code");
+  }, [register]);
+
+  const onSubmit = async ({ code }) => {
+
+    const success = await verifyEmail(code);
+    console.log("success", success)
+    console.log("user", user)
+    if (success) {  
+       navigate("/");
     }
   };
 
   const handleResend = async () => {
-    if (!user.email) return;
-      setOtp(new Array(6).fill(""));
+    if (!user?.email) return toast.error("You need to login");
+
+    setValue("code", "");
+
+    
+
     await resendVerificationCode(user.email);
   };
 
-  const handleVerify = async () => {
-    const code = otp.join("");
-    const success = await verifyEmail(code);
+  const handlePaste = (e) => {
+    e.preventDefault();
 
-    if(success) return  navigate("/")
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+
+    setValue("code", pasted, {
+      shouldValidate: true,
+    });
+
+    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
 
+  useEffect(() => {
+    if (code.length === 6) {
+      handleSubmit(onSubmit)();
+    }
+  }, [code, handleSubmit]);
+
   return (
-    <div className="h-full flex justify-center items-center p-4">
-      <div className="w-full max-w-md rounded-2xl shadow-xl border border-gray-200 bg-white overflow-hidden">
-        {/* Content Section */}
-        <div className="px-6 py-7 flex flex-col gap-3 text-center">
-          <h1 className="text-3xl font-semibold text-gray-700 mb-5">
-            Verify Email
+    <div className="flex h-full items-center justify-center p-4 bg-gray-50">
+      <div className="w-full max-w-md rounded-3xl bg-white border border-gray-200 shadow-xl p-8">
+        <div className="flex flex-col items-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sky-100">
+            <Mail className="h-10 w-10 text-sky-600" />
+          </div>
+
+          <h1 className="mt-5 text-2xl font-semibold text-gray-800">
+            Verify Your Email
           </h1>
-          <p className="text-gray-500 text-sm">
-            Enter the 6-digit code sent to your email address
+
+          <p className="mt-3 text-center text-sm leading-6 text-gray-500">
+            We've sent a{" "}
+            <span className="font-semibold text-gray-700">
+              6-digit verification code
+            </span>{" "}
+            to
+            <br />
+            <span className="font-medium text-sky-600">{user?.email}</span>
+            <br />
+            Enter the code below
           </p>
 
-          {/* OTP Inputs */}
-         <div className="flex justify-center gap-1.5 sm:gap-2">
-  {otp.map((digit, i) => (
-    <input
-      key={i}
-      ref={(el) => (inputRefs.current[i] = el)}
-      type="text"
-      maxLength={1}
-      value={digit}
-      onChange={(e) => handleChange(e.target.value, i)}
-      onKeyDown={(e) => handleKeyDown(e, i)}
-      className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 text-center text-sm sm:text-base font-semibold rounded-md border border-gray-300 bg-gray-50 text-gray-700 focus:outline-none focus:ring-1 focus:ring-sky-500"
-    />
-  ))}
-</div>
+          <div className="mt-5  flex justify-center gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputRefs.current[i] = el)}
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={1}
+                value={code[i] || ""}
+                onPaste={handlePaste}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
 
+                  const chars = code.split("");
+                  chars[i] = value;
 
-          {/* Verify Button */}
+                  const newCode = chars.join("");
+
+                  setValue("code", newCode, {
+                    shouldValidate: true,
+                  });
+
+                  if (value && i < 5) {
+                    inputRefs.current[i + 1]?.focus();
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace") {
+                    const chars = code.split("");
+
+                    if (chars[i]) {
+                      chars[i] = "";
+                      setValue("code", chars.join(""), {
+                        shouldValidate: true,
+                      });
+                    } else if (i > 0) {
+                      inputRefs.current[i - 1]?.focus();
+                    }
+                  }
+                }}
+                className={`h-12 w-12 rounded-xl border text-center text-xl font-bold outline-none transition-all ${
+                  errors.code
+                    ? "border-red-500 ring-2 ring-red-200"
+                    : "border-gray-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                }`}
+              />
+            ))}
+          </div>
+
+          
+            {errors.code && (
+              <p className="text-sm my-2 text-red-500">{errors.code.message}</p>
+            )}
+         
+
           <button
-  onClick={handleVerify}
-  disabled={loading || resending} // disable in both cases
-  className={`w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 mt-2 text-sm rounded-lg shadow-md transition flex justify-center items-center gap-2 ${
-    loading || resending ? "opacity-60 cursor-not-allowed" : ""
-  }`}
->
-  {resending ? (
-    <>
-      <Loader className="animate-spin h-4 w-4" />
-      Resending...
-    </>
-  ) : loading ? (
-    <>
-      <Loader className="animate-spin h-4 w-4" />
-      Verifying...
-    </>
-  ) : (
-    "Verify Email"
-  )}
-</button>
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={loading || resending}
+            className="flex w-full mt-5  text-sm items-center justify-center gap-2 rounded-xl bg-sky-500 py-3 font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? (
+              <>
+                <Loader className="h-5 w-5 animate-spin" />
+                Verifying...
+              </>
+            ) : (
+              "Verify Email"
+            )}
+          </button>
 
-
-          {/* Resend link */}
-          <p className="text-sm text-gray-500">
-            Didn’t get the code?{" "}
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Didn't receive the code?
             <button
+              type="button"
               onClick={handleResend}
-              className="text-sky-500 hover:text-sky-600 font-medium"
+              disabled={resending}
+              className="ml-1 font-semibold text-sky-600 hover:text-sky-700 disabled:opacity-60"
             >
-              Resend
+              {resending ? "Sending..." : "Resend Code"}
             </button>
           </p>
         </div>
-
-        {/* Footer
-        <div className="px-4 py-4 bg-sky-50 text-center border-t border-gray-200">
-          <Link
-            to="/login"
-            className="inline-flex items-center text-sky-500 hover:text-sky-600 text-sm font-medium"
-          >
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to login
-          </Link>
-        </div> */}
       </div>
     </div>
   );

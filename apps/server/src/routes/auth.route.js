@@ -5,7 +5,7 @@ import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyE
 } from '../controllers/auth.controller.js';
 import { adminRoute, protectRoute } from '../middlewares/auth.middleware.js';
 import validate from '../middlewares/validate.middleware.js';
-import {RegisterSchema, LoginSchema} from "@repo/shared"
+import {RegisterSchema, LoginSchema, ResendVerificationOtpSchema} from "@repo/shared"
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post('/logout',protectRoute, logout);
 router.get("/profile", protectRoute, getProfile);
 router.post("/reset-password/:code", resetPassword);
 router.get("/verify-reset-token/:token",  verifyResetToken)
-router.post("/resend-verification", resendVerificationCode);
+router.post("/resend-verification",validate(ResendVerificationOtpSchema), resendVerificationCode);
 router.post("/set-password", protectRoute, setPassword);
 //switch roles
 router.post("/:userId/role", protectRoute, switchRoleToAdmin);

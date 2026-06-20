@@ -49,25 +49,25 @@ export const useUserStore = create((set, get) => ({
           "Something went wrong. Please try again.",
       );
     }
-  },
-  verifyEmail: async (code) => {
-    set({ loading: true });
-    try {
-      const res = await axios.post("/auth/verify-email", { code });
-
-      set({ loading: false, user: res.data });
-
-      toast.success("Email verified successfully");
-      return res.data;
-    } catch (error) {
-      set({ loading: false });
-      console.error("Error in verifyEmail", error);
-      toast.error(
-        error.response.data.message ||
-          "Something went wrong. Please try again.",
-      );
-    }
-  },
+    },
+    verifyEmail: async (code) => {
+      set({ loading: true });
+      try {
+        const res = await axios.post("/auth/verify-email", { code });
+        console.log("res", res.data)
+        set({ loading: false, user: res.data });
+        
+        toast.success("Email verified successfully");
+        return true
+      } catch (error) {
+        set({ loading: false });
+        console.error("Error in verifyEmail", error);
+        toast.error(
+          error.response.data.message ||
+            "Something went wrong. Please try again.",
+        );
+      }
+    },
   login: async ({ email, password }) => {
     set({ loading: true });
 

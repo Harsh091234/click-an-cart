@@ -159,13 +159,9 @@ export const verifyEmail = async (req, res) => {
     await user.save();
     await sendWelcomeEmail(user.email, user.name);
 
-    res.status(200).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      isVerified: true,
-      authProvider: user.authProvider
-    });
+    res.status(200).json(
+     user
+    );
   } catch (error) {
     console.error("Error in verifyEmail controller:", error.message);
     res.status(500).json({
@@ -366,11 +362,14 @@ export const verifyResetToken = async (req, res) => {
 export const resendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
+    
 
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    if(user.isVerified) return res.status(400).json({ message: "User already verified" });
 
    
    const verificationCode = randomInt(0, 1000000)
