@@ -54,7 +54,7 @@ export const useUserStore = create((set, get) => ({
       set({ loading: true });
       try {
         const res = await axios.post("/auth/verify-email", { code });
-        console.log("res", res.data)
+    
         set({ loading: false, user: res.data });
         
         toast.success("Email verified successfully");
@@ -137,12 +137,9 @@ export const useUserStore = create((set, get) => ({
       set({ loading: false });
     }
   },
-  resetPassword: async (code, newPassword, confirmNewPassword) => {
+  resetPassword: async (code, newPassword) => {
     set({ loading: true });
-    if (confirmNewPassword !== newPassword) {
-      set({ loading: false });
-      return toast.error("Passwords do not match");
-    }
+   
     try {
       const res = await axios.post(`/auth/reset-password/${code}`, {
         newPassword,

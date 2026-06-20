@@ -19,7 +19,7 @@ export const LoginSchema = z.object({
 
   password: z
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(1, "Password is required")
     .max(100),
 });
 
@@ -30,8 +30,18 @@ export const VerifyEmailSchema = z.object({
     .regex(/^\d+$/, "Verification code must contain only numbers"),
 });
 
-
 export const ResendVerificationOtpSchema = z.object({
   email: z.email("Invalid email address"),
-
 });
+
+export const ForgotPasswordSchema = z.object({
+  email: z.email("Please enter a valid email"),
+});
+
+export const ResetPasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100),
+});
+

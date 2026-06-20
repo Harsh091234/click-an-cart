@@ -3,7 +3,7 @@ import { useUserStore } from "../store/useUserStore";
 
 const BuyerOnlyRoutes = ({ children }) => {
   const { user } = useUserStore();
-console.log("BuyerOnlyRoutes:", user);
+
 
 
   // Admin can access everything

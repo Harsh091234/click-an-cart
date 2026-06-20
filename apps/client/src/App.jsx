@@ -37,12 +37,10 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
-    console.log("auth user", user);
+    
   }, [checkAuth]);
 
-  useEffect(() => {
-    console.log("user");
-  }, [user]);
+
 
   useEffect(() => {
     if (!user) return;

@@ -1,4 +1,4 @@
-import {  useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 
 const DEFAULT_BORDER = "#d1d5db";
@@ -10,6 +10,8 @@ export const useAnimatedFormErrors = ({
   errorRefs,
   fields,
 }) => {
+  const previousState = useRef({});
+
   useLayoutEffect(() => {
     fields.forEach((field) => {
       const input = inputRefs.current[field];
@@ -17,47 +19,57 @@ export const useAnimatedFormErrors = ({
 
       if (!input || !error) return;
 
-      if (errors[field]) {
-        gsap.killTweensOf([input, error]);
+      const hasError = !!errors[field];
+      const hadError = previousState.current[field];
 
-        gsap.to(input, {
-          borderColor: ERROR_BORDER,
-          boxShadow: "0 0 0 2px rgba(239,68,68,.2)",
-          duration: 0.2,
+      // Always keep input border in sync
+      gsap.to(input, {
+        borderColor: hasError ? ERROR_BORDER : DEFAULT_BORDER,
+        boxShadow: hasError
+          ? "0 0 0 2px rgba(239,68,68,.2)"
+          : "0 0 0 rgba(0,0,0,0)",
+        duration: 0.2,
+        overwrite: "auto",
+      });
+
+      // Skip if the error state didn't change
+      if (hasError === hadError) return;
+
+      gsap.killTweensOf(error);
+
+      if (hasError) {
+        gsap.set(error, {
+          display: "block",
         });
 
         gsap.fromTo(
           error,
           {
             autoAlpha: 0,
-            y: -8,
             height: 0,
+            y: -8,
           },
           {
             autoAlpha: 1,
-            y: 0,
             height: "auto",
+            y: 0,
             duration: 0.25,
             ease: "power2.out",
+            overwrite: "auto",
           },
         );
       } else {
-        gsap.killTweensOf([input, error]);
-
-        gsap.to(input, {
-          borderColor: DEFAULT_BORDER,
-          boxShadow: "0 0 0 rgba(0,0,0,0)",
-          duration: 0.2,
-        });
-
         gsap.to(error, {
           autoAlpha: 0,
-          y: -8,
           height: 0,
+          y: -8,
           duration: 0.2,
           ease: "power2.in",
+          overwrite: "auto",
         });
       }
+
+      previousState.current[field] = hasError;
     });
-  }, [errors]);
+  }, [fields, errors]);
 };
