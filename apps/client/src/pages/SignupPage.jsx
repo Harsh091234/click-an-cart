@@ -1,15 +1,23 @@
-
-import {Lock, Mail,  UserPlus, ArrowRight, Loader, Eye, EyeOff, User} from "lucide-react"
-import { Link, useNavigate } from 'react-router-dom'
-import { useUserStore } from '../store/useUserStore'
-import GoogleLoginButton from '../components/ui/GoogleLoginButton'
-import { useEffect, useRef, useState } from "react"
-import {useAnimatedFormErrors} from "../hooks/UseAnimatedFormErrors"
-  import { useForm } from "react-hook-form";
-  import { zodResolver } from "@hookform/resolvers/zod";
-  import {RegisterSchema} from "@repo/shared"
-import z from "zod"
-import gsap from "gsap"
+import {
+  Lock,
+  Mail,
+  UserPlus,
+  ArrowRight,
+  Loader,
+  Eye,
+  EyeOff,
+  User,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/useUserStore";
+import GoogleLoginButton from "../components/ui/GoogleLoginButton";
+import { useEffect, useRef, useState } from "react";
+import { useAnimatedFormErrors } from "../hooks/UseAnimatedFormErrors";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterSchema } from "@repo/shared";
+import z from "zod";
+import gsap from "gsap";
 const RegisterFormSchema = RegisterSchema.extend({
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -18,40 +26,37 @@ const RegisterFormSchema = RegisterSchema.extend({
 });
 
 const SignupPage = () => {
-  const {signup, loading}  = useUserStore();
- const navigate = useNavigate();
-   const [showPassword, setShowPassword] = useState(false);
-   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-    const inputRefs = useRef({});
+  const { signup, loading } = useUserStore();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const inputRefs = useRef({});
   const errorRefs = useRef({});
 
-    const {
-      register,
-      handleSubmit,
-    
-      formState: { errors },
-    } = useForm({
-      resolver: zodResolver(RegisterFormSchema),
-    
-    });
+  const {
+    register,
+    handleSubmit,
 
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(RegisterFormSchema),
+  });
 
-    const onSubmit = async (data) => {
-      const success = await signup(data);
+  const onSubmit = async (data) => {
+    const success = await signup(data);
 
-      if (success) {
-        navigate("/verify-email");
-      }
-    };
+    if (success) {
+      navigate("/verify-email");
+    }
+  };
 
-
-    useAnimatedFormErrors({
-      errors,
-      inputRefs,
-      errorRefs,
-      fields: ["name", "email", "password", "confirmPassword"],
-    });
+  useAnimatedFormErrors({
+    errors,
+    inputRefs,
+    errorRefs,
+    fields: ["name", "email", "password", "confirmPassword"],
+  });
 
   return (
     <div className="flex h-full ">
@@ -272,6 +277,6 @@ const SignupPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default SignupPage
+export default SignupPage;

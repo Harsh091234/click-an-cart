@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useProductStore } from "../store/useProductStore";
 import { Trash2, Star, ImageOff } from "lucide-react";
-import ProductsListSkeleton from "./skeletons/ProductsListSkeleton"
+import ProductsListSkeleton from "./skeletons/ProductsListSkeleton";
 
 const ProductsList = () => {
-  const { fetchAllProducts, products,  deleteProduct,   toggleFeatureProduct} = useProductStore();
-   const [showSkeleton, setShowSkeleton] = useState(true);
+  const { fetchAllProducts, products, deleteProduct, toggleFeatureProduct } =
+    useProductStore();
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
-   useEffect(() => {
+  useEffect(() => {
     fetchAllProducts();
-      // force skeleton for at least 1.5s
+    // force skeleton for at least 1.5s
     const timer = setTimeout(() => {
       setShowSkeleton(false);
     }, 1000);
@@ -17,9 +18,8 @@ const ProductsList = () => {
     return () => clearTimeout(timer);
   }, [fetchAllProducts]);
 
-  if(showSkeleton) return <ProductsListSkeleton />
+  if (showSkeleton) return <ProductsListSkeleton />;
   return (
-
     <div className="p-4 bg-white rounded-xl shadow-md">
       {/* Mobile Layout (Cards) */}
       <div className="md:hidden max-h-87 scrollbar-hide overflow-y-auto space-y-4">
@@ -57,14 +57,20 @@ const ProductsList = () => {
 
             {/* Bottom buttons */}
             <div className="flex justify-end gap-3 mt-2">
-              <button onClick={() => toggleFeatureProduct(p._id)} className={`p-2 rounded-full transition ${
-          p.isFeatured
-            ? "bg-sky-500 text-white"
-            : "text-sky-500 hover:text-sky-600"
-        }`}>
+              <button
+                onClick={() => toggleFeatureProduct(p._id)}
+                className={`p-2 rounded-full transition ${
+                  p.isFeatured
+                    ? "bg-sky-500 text-white"
+                    : "text-sky-500 hover:text-sky-600"
+                }`}
+              >
                 <Star className="w-5 h-5" />
               </button>
-              <button onClick={() => deleteProduct(p._id)} className="text-red-500 hover:text-red-600">
+              <button
+                onClick={() => deleteProduct(p._id)}
+                className="text-red-500 hover:text-red-600"
+              >
                 <Trash2 className="w-5 h-5" />
               </button>
             </div>
@@ -79,9 +85,15 @@ const ProductsList = () => {
             <tr>
               <th className="uppercase text-left px-4 py-2 text-sm">Product</th>
               <th className="uppercase text-left px-4 py-2 text-sm">Price</th>
-              <th className="uppercase text-left px-4 py-2 text-sm">Category</th>
-              <th className="uppercase text-left px-4 py-2 text-sm">In Stock</th>
-              <th className="uppercase text-left px-4 py-2 text-sm">Featured</th>
+              <th className="uppercase text-left px-4 py-2 text-sm">
+                Category
+              </th>
+              <th className="uppercase text-left px-4 py-2 text-sm">
+                In Stock
+              </th>
+              <th className="uppercase text-left px-4 py-2 text-sm">
+                Featured
+              </th>
               <th className="uppercase text-left px-4 py-2 text-sm">Actions</th>
             </tr>
           </thead>
@@ -108,30 +120,26 @@ const ProductsList = () => {
                 <td className="px-4 py-2 text-gray-700">${p.price}</td>
                 <td className="px-4 py-2 text-gray-700">{p.category}</td>
                 <td className="px-4 py-2 text-gray-700">{p.stock}</td>
-              <td className="px-4 py-2">
-  <button
-    onClick={() => toggleFeatureProduct(p._id)}
-    className={`p-1.5 rounded-full transition ${
-      p.isFeatured
-        ? "bg-sky-500 text-white"
-        : "text-sky-500 hover:text-sky-600"
-    }`}
-  >
-    <Star
-      className="w-4 h-4"
-  
-    />
-  </button>
-</td>
-<td className="px-4 py-2">
-  <button
-    onClick={() => deleteProduct(p._id)}
-    className="p-2 rounded-full text-red-500 hover:text-red-600 transition"
-  >
-    <Trash2 className="w-4 h-4" />
-  </button>
-</td>
-
+                <td className="px-4 py-2">
+                  <button
+                    onClick={() => toggleFeatureProduct(p._id)}
+                    className={`p-1.5 rounded-full transition ${
+                      p.isFeatured
+                        ? "bg-sky-500 text-white"
+                        : "text-sky-500 hover:text-sky-600"
+                    }`}
+                  >
+                    <Star className="w-4 h-4" />
+                  </button>
+                </td>
+                <td className="px-4 py-2">
+                  <button
+                    onClick={() => deleteProduct(p._id)}
+                    className="p-2 rounded-full text-red-500 hover:text-red-600 transition"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </td>
               </tr>
             ))}
 

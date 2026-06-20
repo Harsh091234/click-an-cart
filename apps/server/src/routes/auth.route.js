@@ -1,7 +1,8 @@
 
 import express from 'express';
 import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyEmail, forgotPassword, resetPassword, resendVerificationCode, toggleRole,
-    setPassword,  verifyResetToken, switchRoleToAdmin
+    setPassword,  verifyResetToken, switchRoleToAdmin,
+    editProfile
 } from '../controllers/auth.controller.js';
 import { adminRoute, protectRoute } from '../middlewares/auth.middleware.js';
 import validate from '../middlewares/validate.middleware.js';
@@ -25,7 +26,7 @@ router.post("/set-password", protectRoute, setPassword);
 //switch roles
 router.post("/:userId/role", protectRoute, switchRoleToAdmin);
 router.put("/toggle-role", protectRoute, toggleRole);
-
+router.patch("/edit-profile", protectRoute, editProfile)
 
 
 export default router;

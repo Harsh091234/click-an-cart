@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useCartStore } from "../store/useCartStore";
 import EmptyCart from "../components/EmptyCart";
 import CartItem from "../components/CartItem";
@@ -12,52 +12,39 @@ import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 
 const CartPage = () => {
- 
   const { cart, loading } = useCartStore();
-  const {user} = useUserStore();
- 
-  if(cart.length === 0) return  <div className=" h-full w-full ">
-          <EmptyCart />
-        </div>
+  const { user } = useUserStore();
 
+  if (cart.length === 0)
+    return (
+      <div className=" h-full w-full ">
+        <EmptyCart />
+      </div>
+    );
 
   return (
-   
-      <div className="bg-green-50 h-full flex flex-col md:flex-row  overflow-y-auto scrollbar-hide py-4 px-7 gap-3 md:gap-10">
-
-    
-        <div className=" w-[100%] md:w-[60%] flex flex-col gap-2  ">
-          <h1 className="text-2xl  font-semibold text-sky-500">
-            Your Cart Items
-          </h1>{" "}
-          <div className="">
-             {loading ? (
+    <div className="bg-green-50 h-full flex flex-col md:flex-row  overflow-y-auto scrollbar-hide py-4 px-7 gap-3 md:gap-10">
+      <div className=" w-[100%] md:w-[60%] flex flex-col gap-2  ">
+        <h1 className="text-2xl  font-semibold text-sky-500">
+          Your Cart Items
+        </h1>{" "}
+        <div className="">
+          {loading ? (
             <CartItemSkeleton />
           ) : (
-            
             cart.map((item) => <CartItem key={item._id} item={item} />)
           )}
-          </div>
-         
-         
-            <div className=" hidden md:flex mt-3 pb-7 ">
-              <PeopleAlsoBought />
-            </div>
-        
         </div>
-    
+        <div className=" hidden md:flex mt-3 pb-7 ">
+          <PeopleAlsoBought />
+        </div>
+      </div>
 
-  
-    <div className="w-full  md:mt-8 sm:w-[70%]  md:w-[33%]">
-  
-       
-          <OrderSummary />
+      <div className="w-full  md:mt-8 sm:w-[70%]  md:w-[33%]">
+        <OrderSummary />
 
-          <GiftCouponCard />
-      
-  
-    </div>
-    
+        <GiftCouponCard />
+      </div>
     </div>
   );
 };

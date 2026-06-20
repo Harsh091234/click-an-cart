@@ -464,3 +464,15 @@ export const toggleRole = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const editProfile = async (req, res) => {
+  try {
+   
+    res
+      .status(200)
+      .json({ success: true, message: "Profile edited successful" });
+  } catch (error) {
+    console.log("error in edit profile", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};

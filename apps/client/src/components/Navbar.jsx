@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { LogOut, Lock,  Menu, ShoppingCart, Home } from "lucide-react";
+import { LogOut, Lock, Menu, ShoppingCart, Home, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 
-import GoogleLoginButton from "./ui/GoogleLoginButton";
 import { useCartStore } from "../store/useCartStore";
 
 const Navbar = () => {
-
   const { logout, user } = useUserStore();
   const { cart } = useCartStore();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,58 +29,68 @@ const Navbar = () => {
           {/* for desktop */}
           <div className="flex items-center gap-2 text-xs">
             {" "}
-           {user.role !== "seller" ? <>
-            <div className="flex gap-2">
-              <Link
-                to="/"
-                className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
-              >
-                <Home className="w-4 h-4 text-sky-600" />
-                <span className="hidden md:inline">Home</span>
-              </Link>
+            {user.role !== "seller" ? (
+              <>
+                <div className="flex gap-2">
+                  <Link
+                    to="/"
+                    className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+                  >
+                    <Home className="w-4 h-4 text-sky-600" />
+                    <span className="hidden md:inline">Home</span>
+                  </Link>
 
-              <Link
-                to="/cart"
-                className="hidden sm:flex items-center gap-1 relative bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
-              >
-                <ShoppingCart className="w-4 h-4 text-sky-600" />
-                <span className="hidden md:inline">Cart</span>
+                  <Link
+                    to="/cart"
+                    className="hidden sm:flex items-center gap-1 relative bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+                  >
+                    <ShoppingCart className="w-4 h-4 text-sky-600" />
+                    <span className="hidden md:inline">Cart</span>
 
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1.5 bg-sky-500 text-white text-[0.6rem] font-bold px-[6px] py-[1px] rounded-full shadow-md border border-white">
-                    {cart.length}
-                  </span>
+                    {cart.length > 0 && (
+                      <span className="absolute -top-1 -right-1.5 bg-sky-500 text-white text-[0.6rem] font-bold px-[6px] py-[1px] rounded-full shadow-md border border-white">
+                        {cart.length}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+                {user.role === "admin" && (
+                  <Link
+                    to="/secret-dashboard"
+                    className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+                  >
+                    <Lock className="w-4 h-4 text-sky-600" />
+                    <span className="hidden md:inline">Dashboard</span>
+                  </Link>
                 )}
-              </Link>
-            </div>
-            {user.role === "admin" && (
-              <Link
-                to="/secret-dashboard"
-                className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
-              >
-                <Lock className="w-4 h-4 text-sky-600" />
-                <span className="hidden md:inline">Dashboard</span>
-              </Link>
-            )}
-           </>: <>
-            <div className="flex gap-2">
-              <Link
-                to="/seller"
-                className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
-              >
-                <Home className="w-4 h-4 text-sky-600" />
-                <span className="hidden md:inline">Home</span>
-              </Link>
-               {/* <Link
+              </>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <Link
+                    to="/seller"
+                    className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+                  >
+                    <Home className="w-4 h-4 text-sky-600" />
+                    <span className="hidden md:inline">Home</span>
+                  </Link>
+                  {/* <Link
                 to="/seller-dashboard"
                 className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
               >
                 <Lock className="w-4 h-4 text-sky-600" />
                 <span className="hidden md:inline">Dashboard</span>
               </Link> */}
-            
-            </div>
-           </>}
+                </div>
+              </>
+            )}
+            <Link
+              to="/profile"
+              className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"
+            >
+              <User className="w-4 h-4 text-sky-600" />
+              <span className="hidden md:inline">Profile</span>
+            </Link>
             {/* <Link
     to="/premium"
     className="hidden sm:flex items-center gap-1 bg-white text-sky-600 font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-100 hover:shadow-md transition"

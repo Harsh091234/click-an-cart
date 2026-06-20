@@ -18,11 +18,10 @@ const categories = [
 ];
 
 const HomePage = () => {
-  
-  const { loading, fetchFeaturedProducts,products } = useProductStore();
+  const { loading, fetchFeaturedProducts, products } = useProductStore();
   const [delayedLoading, setDelayedLoading] = useState(true);
-  const { user} = useUserStore();
-  
+  const { user } = useUserStore();
+
   useEffect(() => {
     let timer;
     if (!loading) {
@@ -37,10 +36,10 @@ const HomePage = () => {
     return () => clearTimeout(timer);
   }, [loading]);
 
-  	useEffect(() => {
-		fetchFeaturedProducts();
-	}, [fetchFeaturedProducts]);
- 
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, [fetchFeaturedProducts]);
+
   return (
     <div className="h-full px-3 py-3  justify-center text-black overflow-y-auto w-full scrollbar-hide">
       <h1 className="mt-8 mb-3 text-center text-4xl font-bold text-sky-500">
@@ -51,30 +50,21 @@ const HomePage = () => {
       </p>
 
       <div className="flex  w-full justify-center   ">
-        <div className="justify-center md:justify-start flex gap-3 flex-wrap max-w-[58.6rem]" >
-{delayedLoading
-          ? Array.from({ length: 6 }).map((_, idx) => (
-              <CategoryItemSkeleton key={idx} />
-            ))
-          : categories?.map((category) => (
-              <CategoryItem key={category.name} category={category} />
-            ))}
+        <div className="justify-center md:justify-start flex gap-3 flex-wrap max-w-[58.6rem]">
+          {delayedLoading
+            ? Array.from({ length: 6 }).map((_, idx) => (
+                <CategoryItemSkeleton key={idx} />
+              ))
+            : categories?.map((category) => (
+                <CategoryItem key={category.name} category={category} />
+              ))}
         </div>
-        
       </div>
 
-      	{!loading && products.length > 0 && 
-      
-           <FeaturedProducts featuredProducts={products} />
-     } 
-     { user.role !== 'admin' && (
-         <SwitchRoleButton />
-     )
-
-     }
-     
-  
-    
+      {!loading && products.length > 0 && (
+        <FeaturedProducts featuredProducts={products} />
+      )}
+      {user.role !== "admin" && <SwitchRoleButton />}
     </div>
   );
 };

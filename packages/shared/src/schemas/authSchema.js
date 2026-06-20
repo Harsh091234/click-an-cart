@@ -45,3 +45,26 @@ export const ResetPasswordSchema = z.object({
     .max(100),
 });
 
+export const EditProfileSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username cannot exceed 20 characters"),
+
+  email: z.string().trim().email("Invalid email address").toLowerCase(),
+
+  location: z
+    .string()
+    .trim()
+    .min(2, "Location is required")
+    .max(100, "Location cannot exceed 100 characters")
+    .optional(),
+
+  phone: z
+    .string()
+    .trim()
+    .length(10, "phone no is required")
+    
+    .optional(),
+});
+
