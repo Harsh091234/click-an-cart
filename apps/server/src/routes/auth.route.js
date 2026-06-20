@@ -5,18 +5,18 @@ import { register, logout, login, refreshToken, getProfile, googleAuth,  verifyE
 } from '../controllers/auth.controller.js';
 import { adminRoute, protectRoute } from '../middlewares/auth.middleware.js';
 import validate from '../middlewares/validate.middleware.js';
-import {RegisterSchema} from "@repo/shared"
+import {RegisterSchema, LoginSchema} from "@repo/shared"
 
 const router = express.Router();
 
 router.post("/google", googleAuth);
 
 router.post('/register',validate(RegisterSchema), register);
-router.post('/login', login);
+router.post('/login',validate(LoginSchema), login);
 router.post('/refresh-token',refreshToken);
 router.post("/verify-email", verifyEmail);
 router.post("/forgot-password",forgotPassword)
-router.post('/logout', logout);
+router.post('/logout',protectRoute, logout);
 router.get("/profile", protectRoute, getProfile);
 router.post("/reset-password/:code", resetPassword);
 router.get("/verify-reset-token/:token",  verifyResetToken)
