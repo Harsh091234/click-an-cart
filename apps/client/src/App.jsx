@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useThemeStore } from "./store/useThemeStore";
 import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
@@ -32,7 +31,7 @@ import AdminOnlyRoutes from "./routes/AdminOnlyRoutes";
 
 const App = () => {
   const { user, checkAuth, checkingAuth } = useUserStore();
-  const [delayDone, setDelayDone] = useState(false);
+  
   const { getCartItems } = useCartStore();
 
   useEffect(() => {
