@@ -2,6 +2,14 @@ import { Upload, CirclePlus, Loader } from "lucide-react";
 import React, { useState } from "react";
 import { useProductStore } from "../store/useProductStore";
 import {useUserStore} from "../store/useUserStore";
+import { CreateProductSchema } from "@repo/shared";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useRef } from "react";
+import  {useAnimatedFormErrors} from "../hooks/UseAnimatedFormErrors"
+import Input from "../components/Input"
+import FormError from "../components/FormError"
+import ProductImagesModal from "./modals/ProductImagesModal";
 const categories = [
   "jeans",
   "t-shirts",
@@ -13,171 +21,253 @@ const categories = [
 ];
 
 const CreateProductsForm = () => {
-  const {loading, uploading, createProducts, createSellerProduct} = useProductStore();
-   const {user} = useUserStore();
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "",
-    stock: "",
-    image: null,
+  const { loading, uploading, createProducts, createSellerProduct } =
+    useProductStore();
+  const { user } = useUserStore();
+  const [images, setImages] = useState([]);
+  const [isProductsImagesModalOpen, setIsProductsImagesModalOpen] =
+    useState(false);
+  const [error, setError] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("");
+  // "success" | "error" | ""
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(CreateProductSchema),
   });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if(file){
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProduct({...newProduct, image: reader.result});
-      }
-      reader.readAsDataURL(file);
+  const { ref: nameRef, ...nameField } = register("name");
+  const { ref: descriptionRef, ...descriptionField } = register("description");
+  const { ref: priceRef, ...priceField } = register("price");
+  const { ref: categoryRef, ...categoryField } = register("category");
+  const { ref: stockRef, ...stockField } = register("stock");
+
+  const inputRefs = useRef({});
+  const errorRefs = useRef({});
+
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    if (!images.length < 1) {
+      setError("Please select at least one image");
     }
-  }
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-   
-    if(user && user.role === "seller"){
-      await createSellerProduct(newProduct);
+    if (!images.length > 5) {
+      setError("You can only upload up to 5 images");
     }
-    else{
-       await createProducts(newProduct);
+ images.forEach((img) => {
+   formData.append("images", img.file);
+ });
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("stock", data.stock);
+    formData.append("category", data.category);
+
+    let success;
+    if (user && user.role === "seller") {
+      success = await createSellerProduct(formData);
+    } else {
+      success = await createProducts(formData);
     }
-   
-    
-    setNewProduct({ name: "", description: "", price: "", category: "", image: "" ,  stock: "",});
+
+    if (success) {reset();
+    setImages([]);
+    setUploadStatus("");
+    setError(""); }
   };
 
+  const handleDone = () => {
+    if (images.length > 0) {
+      setUploadStatus("success");
+      setIsProductsImagesModalOpen(false);
+    } else {
+      setUploadStatus("error");
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length + images.length > 5) {
+      setError("You can only upload up to 5 images");
+      return;
+    }
+
+    const newImages = files.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
+
+    setImages((prev) => [...prev, ...newImages]);
+    setError("");
+  };
+  const removeImage = (index) => {
+    setImages((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+
+      if (updated.length < 1) {
+        setError("Please select at least one image");
+      } else {
+        setError("");
+      }
+
+      return updated;
+    });
+  };
+
+  useAnimatedFormErrors({
+    errors,
+    inputRefs,
+    errorRefs,
+    fields: ["name", "description", "price", "category", "stock"],
+  });
+
   return (
-    <div className="w-full sm:max-w-xl mx-auto bg-white shadow rounded-xl border border-gray-200 py-5 px-7 h-full ">
+    <div className="w-full sm:max-w-xl mx-auto bg-white shadow rounded-xl border border-gray-200 py-9 px-12 h-full ">
       <h1 className="text-[1.77rem] font-semibold text-sky-500 mb-6 text-center">
         Create New Product
       </h1>
 
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
         {/* Row: Product Name + Price */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
           <div className="w-full sm:w-[60%]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Product Name
             </label>
-            <input
-              type="text"
-              name="name"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-              className="w-full outline-0 rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-sky-500 focus:border-sky-500"
+            <Input
+              {...nameField}
+              ref={(el) => {
+                nameRef(el);
+                inputRefs.current.name = el;
+              }}
+            />
+            <FormError
+              error={errors.name}
+              errorRef={(el) => (errorRefs.current.name = el)}
             />
           </div>
           <div className="w-full sm:w-[40%]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Price
             </label>
-            <input
-              type="number"
-              name="price"
-              value={newProduct.price}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, price: e.target.value })
-              }
-              className="w-full outline-0 rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-sky-500 focus:border-sky-500"
+            <Input
+              type="text"
+              {...priceField}
+              ref={(el) => {
+                priceRef(el);
+                inputRefs.current.price = el;
+              }}
+            />
+
+            <FormError
+              error={errors.price}
+              errorRef={(el) => (errorRefs.current.price = el)}
             />
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-sm font-medium text-gray-600 mb-1">
             Description
           </label>
           <textarea
-            name="description"
-            value={newProduct.description}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, description: e.target.value })
-            }
-            className="w-full  outline-0 rounded-md border border-gray-300 px-2 py-1 text-sm h-8 sm:h-20 resize-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500"
+            {...descriptionField}
+            ref={(el) => {
+              descriptionRef(el);
+              inputRefs.current.description = el;
+            }}
+            className="w-full h-30 resize-none overflow-y-auto   rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-700 focus:outline-none"
+          />
+
+          <FormError
+            error={errors.description}
+            errorRef={(el) => (errorRefs.current.description = el)}
           />
         </div>
 
         {/* Row: Category + Stock */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 sm:gap-6">
           <div className="w-[60%]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Category
             </label>
             <select
-              name="category"
-              value={newProduct.category}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, category: e.target.value })
-              }
-              className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-sky-500 focus:border-sky-500"
+              {...categoryField}
+              ref={(el) => {
+                categoryRef(el);
+                inputRefs.current.category = el;
+              }}
+              className="w-full    rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-700 focus:outline-none"
             >
-              <option value="" disabled>
-                Select Category
-              </option>
+              <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat} className="text-gray-700 text-sm">
+                <option key={cat} value={cat}>
                   {cat}
                 </option>
               ))}
             </select>
+
+            <FormError
+              error={errors.category}
+              errorRef={(el) => (errorRefs.current.category = el)}
+            />
           </div>
           <div className="w-[40%]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Count in Stock
             </label>
-            <input
-              type="number"
-              name="stock"
-              value={newProduct.stock}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, stock: e.target.value })
-              }
-              className="w-full rounded-md outline-0 border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-sky-500 focus:border-sky-500"
+            <Input
+              type="text"
+              {...stockField}
+              ref={(el) => {
+                stockRef(el);
+                inputRefs.current.stock = el;
+              }}
+            />
+
+            <FormError
+              error={errors.stock}
+              errorRef={(el) => (errorRefs.current.stock = el)}
             />
           </div>
         </div>
 
         {/* Upload + Submit */}
         <div className="flex flex-col gap-3 sm:flex-row  items-center justify-between pt-2">
-         <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto gap-2">
-  <input
-    type="file"
-    id="fileUpload"
-    name="image"
-    onChange={handleImageChange}
-    className="hidden"
-    accept="image/*"
-  />
-  <label
-    htmlFor="fileUpload"
-    className={`flex items-center justify-center gap-1 
+          <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto gap-2">
+            <label
+              onClick={() => setIsProductsImagesModalOpen(true)}
+              className={`flex items-center justify-center gap-1 
       bg-sky-100 border border-sky-200 text-sky-600 
       px-4 py-1.5 rounded-md font-medium text-sm 
       hover:bg-sky-200 transition cursor-pointer 
       w-full sm:w-32 text-center`} // full width before sm
-  >
-    {uploading ? (
-      <>
-        <Loader className="h-3.5 w-3.5 animate-spin" />
-        <span>Uploading...</span>
-      </>
-    ) : (
-      <>
-        <Upload className="h-3.5 w-3.5" />
-        <span>Upload</span>
-      </>
-    )}
-  </label>
+            >
+              <Upload className="h-3.5 w-3.5" />
+              <span>Upload</span>
+            </label>
+            {uploadStatus === "success" && (
+              <span className="text-blue-500 text-sm">
+                Image uploaded successfully
+              </span>
+            )}
 
-  {newProduct.image && (
-    <span className="text-sm text-gray-400">Image uploaded success</span>
-  )}
-</div>
+            {uploadStatus === "error" && (
+              <span className="text-red-500 text-sm">
+                Failed to upload images
+              </span>
+            )}
+
+            {/* {
+              <span className="text-sm text-gray-400">
+                Image uploaded success
+              </span>
+            } */}
+          </div>
           <button
             type="submit"
             disabled={loading}
@@ -201,6 +291,20 @@ const CreateProductsForm = () => {
           </button>
         </div>
       </form>
+      <ProductImagesModal
+        images={images}
+        open={isProductsImagesModalOpen}
+        onClose={() => {
+
+          setImages([]);
+          setUploadStatus("error")
+          setIsProductsImagesModalOpen(false);
+        }}
+        handleImageChange={handleImageChange}
+        removeImage={removeImage}
+        error={error}
+        onDone={handleDone}
+      />
     </div>
   );
 };

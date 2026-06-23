@@ -1,6 +1,7 @@
 import Product from "../models/product.model.js";
 import {redis} from "../utils/redis.js"
-import cloudinary from "../utils/cloudinary.js"
+import cloudinary, { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { success } from "zod";
 
 
 
@@ -45,24 +46,35 @@ export const getfeaturedProducts = async(req, res) => {
 
 export const createProduct = async(req, res) => {
   try {
-    const {name, image, description, price, category, stock} = req.body;
+   
+    const {name, description, price, category, stock} = req.body;
 
-    let cloudinaryResponse = null;
-    if(image){
-      cloudinaryResponse = await cloudinary.uploader.upload(image, {folder: "products"});
-    }
+   const images = req.files;
+    console.log("hi", images);
+
+
+   if(images.length === 0) return res.status(400).json({success: false, message: "Atleast one image is required"})
+   
+  
+    let imageUrls = await Promise.all(
+      images.map(async (image) => {
+        const cloudResponse = await uploadOnCloudinary(image.path);
+        return cloudResponse.secure_url;
+      }),
+    );
+   
 
     const product = await Product.create({
       name, 
       description,
       price,
       stock,
-      image: cloudinaryResponse?.secure_url || "",
+      images: imageUrls,
       category,
       author: req.user._id,
     })
-   
-    res.status(201).json(product);
+    
+     res.status(201).json(product);
 
   } catch (error) {
       console.error("Error in createProduct controller:", error);
