@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import { redis } from "../utils/redis.js"
+import { redis } from "../utils/redis.js";
 import axios from "axios";
 import { randomInt } from "crypto";
 import {
@@ -9,8 +9,7 @@ import {
   sendPasswordResetSuccessEmail,
   sendPasswordResetEmail,
 } from "../utils/mailing/email.js";
-
-
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -54,13 +53,13 @@ export const googleAuth = async (req, res) => {
     }
 
     const response = await axios.get(
-      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`,
     );
-    if(!response) return res.status(400).json
+    if (!response) return res.status(400).json;
     const { email, name } = response.data;
 
     let user = await User.findOne({ email });
-      const verificationCode = randomInt(0, 1_000_000)
+    const verificationCode = randomInt(0, 1_000_000)
       .toString()
       .padStart(6, "0");
     if (!user) {
@@ -68,9 +67,9 @@ export const googleAuth = async (req, res) => {
         name,
         email,
         hasPassword: false,
-         verificationCode,
-        
-      verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        verificationCode,
+
+        verificationCodeExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         authProvider: "google",
       });
     }
@@ -78,14 +77,14 @@ export const googleAuth = async (req, res) => {
     const { refreshToken, accessToken } = generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, refreshToken, accessToken);
- await sendVerificationEmail(user.email, verificationCode);
+    await sendVerificationEmail(user.email, verificationCode);
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-       isVerified: user.isVerified,
+      isVerified: user.isVerified,
     });
   } catch (error) {
     console.error("Error in googleAuth:", error.message);
@@ -138,7 +137,6 @@ export const register = async (req, res) => {
   }
 };
 
-
 export const verifyEmail = async (req, res) => {
   try {
     const { code } = req.body;
@@ -146,7 +144,7 @@ export const verifyEmail = async (req, res) => {
       verificationCode: code,
       verificationCodeExpiresAt: { $gt: Date.now() },
     });
-  
+
     if (!user) {
       return res
         .status(400)
@@ -159,9 +157,7 @@ export const verifyEmail = async (req, res) => {
     await user.save();
     await sendWelcomeEmail(user.email, user.name);
 
-    res.status(200).json(
-     user
-    );
+    res.status(200).json(user);
   } catch (error) {
     console.error("Error in verifyEmail controller:", error.message);
     res.status(500).json({
@@ -176,17 +172,16 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await user.comparePassword(password))) {
-     
       const { accessToken, refreshToken } = generateTokens(user._id);
       await storeRefreshToken(user._id, refreshToken);
       setCookies(res, refreshToken, accessToken);
 
       res.json({
         _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-       isVerified: user.isVerified,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
       });
     } else {
       res.status(400).json({ message: "Invalid email or password" });
@@ -204,11 +199,9 @@ export const logout = async (req, res) => {
     if (refreshToken) {
       const decoded = jwt.verify(
         refreshToken,
-        process.env.REFRESH_TOKEN_SECRET
+        process.env.REFRESH_TOKEN_SECRET,
       );
       await redis.del(`refresh_token: ${decoded.userId}`);
-      
-    
     }
 
     res.clearCookie("accessToken");
@@ -237,7 +230,7 @@ export const refreshToken = async (req, res) => {
     const accessToken = jwt.sign(
       { userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1m" }
+      { expiresIn: "1m" },
     );
 
     res.cookie("accessToken", accessToken, {
@@ -247,7 +240,7 @@ export const refreshToken = async (req, res) => {
       maxAge: 1 * 60 * 1000,
     });
 
-   res.json({ accessToken });
+    res.json({ accessToken });
   } catch (error) {
     console.log("Error in refreshToken controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -258,7 +251,6 @@ export const getProfile = async (req, res) => {
   try {
     console.log("user", req.user);
     res.json(req.user);
-   
   } catch (error) {
     console.error("Error in getProfile:", error.message);
     res.status(500).json({ error: "Server error, please try again later." });
@@ -290,16 +282,14 @@ export const forgotPassword = async (req, res) => {
 
     await sendPasswordResetEmail(
       user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`
+      `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`,
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "password reset link sent to your email",
-        code: user.resetPasswordCode,
-      });
+    res.status(200).json({
+      success: true,
+      message: "password reset link sent to your email",
+      code: user.resetPasswordCode,
+    });
   } catch (error) {
     console.log("Error in forgot password: ", error);
     res.status(400).json({ sucess: false, message: error.message });
@@ -310,7 +300,7 @@ export const resetPassword = async (req, res) => {
   try {
     const { code } = req.params;
     const { newPassword } = req.body;
-  
+
     const user = await User.findOne({
       resetPasswordCode: code,
       resetPasswordCodeExpiresAt: { $gt: Date.now() },
@@ -338,14 +328,12 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-
-
 export const verifyResetToken = async (req, res) => {
   try {
     const { token } = req.params;
     const user = await User.findOne({
       resetPasswordCode: token,
-      resetPasswordCodeExpiresAt: { $gt: Date.now() }
+      resetPasswordCodeExpiresAt: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -358,23 +346,19 @@ export const verifyResetToken = async (req, res) => {
   }
 };
 
-
 export const resendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
-    
 
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if(user.isVerified) return res.status(400).json({ message: "User already verified" });
+    if (user.isVerified)
+      return res.status(400).json({ message: "User already verified" });
 
-   
-   const verificationCode = randomInt(0, 1000000)
-  .toString()
-  .padStart(6, "0");
+    const verificationCode = randomInt(0, 1000000).toString().padStart(6, "0");
     user.verificationCode = verificationCode;
     user.verificationCodeExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h expiry
     await user.save();
@@ -391,15 +375,16 @@ export const resendVerificationCode = async (req, res) => {
 
 export const setPassword = async (req, res) => {
   try {
-    const {_id} = req.user; 
-    
-    const { password} = req.body;
+    const { _id } = req.user;
 
+    const { password } = req.body;
 
     const user = await User.findById(_id);
-    console.log("user: ", user)
+    console.log("user: ", user);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
     }
     user.password = password;
     user.hasPassword = true;
@@ -408,49 +393,49 @@ export const setPassword = async (req, res) => {
 
     res.status(200).json({
       _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        hasPassword: user.hasPassword,
-        isVerified: user.isVerified,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      hasPassword: user.hasPassword,
+      isVerified: user.isVerified,
     });
   } catch (err) {
     console.error("Set password error:", err);
-    res.status(500).json({ success: false, message: "Server error.", hasPassword: false });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error.", hasPassword: false });
   }
 };
 
 export const switchRoleToAdmin = async (req, res) => {
   try {
-    const {role} = req.body;
-    if(role !== "admin" ){
-      return res.status(401).json({message: "Access denied! Admins Only."})
+    const { role } = req.body;
+    if (role !== "admin") {
+      return res.status(401).json({ message: "Access denied! Admins Only." });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
-      role
-    }, {
-      new: true
-    })
-    if(!updatedUser){
-      return res.status(404).json({message: "User not found"});
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      {
+        role,
+      },
+      {
+        new: true,
+      },
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json(
-      updatedUser
-    )
-
+    res.status(200).json(updatedUser);
   } catch (err) {
     console.error("Error switching role: ", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-
-
-
 export const toggleRole = async (req, res) => {
   try {
-    const userId = req.user._id; 
+    const userId = req.user._id;
     const user = await User.findById(userId);
 
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -467,10 +452,39 @@ export const toggleRole = async (req, res) => {
 
 export const editProfile = async (req, res) => {
   try {
-   
+    const { email, name, location, phone } = req.body;
+
+    const avatar = req.file?.path;
+    console.log("langs", req.body);
+
+    const user = await User.findOne({ email }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    let uploaded;
+    if (avatar) {
+      uploaded = await uploadOnCloudinary(avatar);
+      user.avatar = uploaded?.secure_url;
+    }
+
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+    user.location = location;
+
+    let languages = JSON.parse(req.body.languages || "[]");
+    user.languages = languages;
+    await user.save();
+    console.log("user frin ed:", user);
+
     res
       .status(200)
-      .json({ success: true, message: "Profile edited successful" });
+      .json({ success: true, user, message: "Profile edited successful" });
   } catch (error) {
     console.log("error in edit profile", error);
     res.status(400).json({ success: false, message: error.message });

@@ -53,7 +53,20 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
     refreshToken: {
-      types: String
+      type: String
+    },
+    location: String,
+    avatar: {
+      type: String,
+    
+    },
+    phone: String,
+    coverImage:{
+      type: String
+    },
+    languages: {
+      type: [String],
+    
     },
     verificationCode: String,
     verificationCodeExpiresAt: Date,

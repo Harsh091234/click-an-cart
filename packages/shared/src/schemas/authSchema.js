@@ -17,10 +17,7 @@ export const RegisterSchema = z.object({
 export const LoginSchema = z.object({
   email: z.email("Invalid email address"),
 
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .max(100),
+  password: z.string().min(1, "Password is required").max(100),
 });
 
 export const VerifyEmailSchema = z.object({
@@ -51,20 +48,18 @@ export const EditProfileSchema = z.object({
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username cannot exceed 20 characters"),
 
-  email: z.string().trim().email("Invalid email address").toLowerCase(),
+  email: z.email("Invalid email address"),
 
-  location: z
-    .string()
-    .trim()
-    .min(2, "Location is required")
-    .max(100, "Location cannot exceed 100 characters")
-    .optional(),
-
+  location: z.string().trim().max(100).optional(),
   phone: z
     .string()
     .trim()
-    .length(10, "phone no is required")
-    
-    .optional(),
+    .regex(/^\d{10}$/, "Phone number must be 10 digits")
+    .optional()
+    .or(z.literal("")),  
+  languages: z.preprocess((val) => {
+    if (!val) return [];
+    if (typeof val === "string") return [val];
+    return val;
+  }, z.array(z.string()).min(1).max(5)),
 });
-

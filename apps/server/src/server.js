@@ -26,6 +26,7 @@ app.use('/pictures', express.static('public/pictures'));
 
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));;
+app.use(express.urlencoded({extended: true, limit:"10mb"}))
 app.use(cors({
   origin: "http://localhost:5173",  // your frontend URL
   credentials: true,                // allow cookies/auth headers if needed

@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@repo/shared": "workspace:*",
-
     "@upstash/redis": "^1.38.0",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
@@ -32,8 +31,8 @@
     "google-auth-library": "^10.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
+    "multer": "^2.2.0",
     "nodemailer": "^7.0.5",
     "stripe": "^18.4.0"
   }
 }
-

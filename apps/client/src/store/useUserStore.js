@@ -49,25 +49,25 @@ export const useUserStore = create((set, get) => ({
           "Something went wrong. Please try again.",
       );
     }
-    },
-    verifyEmail: async (code) => {
-      set({ loading: true });
-      try {
-        const res = await axios.post("/auth/verify-email", { code });
-    
-        set({ loading: false, user: res.data });
-        
-        toast.success("Email verified successfully");
-        return true
-      } catch (error) {
-        set({ loading: false });
-        console.error("Error in verifyEmail", error);
-        toast.error(
-          error.response.data.message ||
-            "Something went wrong. Please try again.",
-        );
-      }
-    },
+  },
+  verifyEmail: async (code) => {
+    set({ loading: true });
+    try {
+      const res = await axios.post("/auth/verify-email", { code });
+
+      set({ loading: false, user: res.data });
+
+      toast.success("Email verified successfully");
+      return true;
+    } catch (error) {
+      set({ loading: false });
+      console.error("Error in verifyEmail", error);
+      toast.error(
+        error.response.data.message ||
+          "Something went wrong. Please try again.",
+      );
+    }
+  },
   login: async ({ email, password }) => {
     set({ loading: true });
 
@@ -88,9 +88,8 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const res = await axios.get("/auth/profile");
-    
+
       set({ user: res.data, checkingAuth: false });
-  
     } catch (error) {
       set({ user: null, checkingAuth: false });
       console.error(
@@ -139,7 +138,7 @@ export const useUserStore = create((set, get) => ({
   },
   resetPassword: async (code, newPassword) => {
     set({ loading: true });
-   
+
     try {
       const res = await axios.post(`/auth/reset-password/${code}`, {
         newPassword,
@@ -161,6 +160,22 @@ export const useUserStore = create((set, get) => ({
     } catch (err) {
       set({ validResetToken: false });
       console.error("Error in password reset token", err);
+    }
+  },
+
+  editProfile: async (formData) => {
+     set({ loading: true });
+    try {
+      const res = await axios.patch(`/auth/edit-profile`, formData);
+
+      set({user: res.data.user, loading: false})
+      return true;
+    } catch (err) {
+      set({ loading: false});
+       console.log(err);
+       console.log("Status:", err.response?.status);
+       console.log("Response:", err.response?.data);
+     
     }
   },
   setUserPassword: async (password) => {
