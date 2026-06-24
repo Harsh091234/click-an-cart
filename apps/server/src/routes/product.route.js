@@ -8,6 +8,7 @@ import {
   getProductsByCategory,
   toggleFeaturedProduct,
   showSellerProducts,
+  getProductById,
 } from "../controllers/product.controller.js";
 import {
   adminRoute,
@@ -33,6 +34,7 @@ router.post(
   createProduct,
 );
 router.get("/seller", protectRoute, sellerRoute, showSellerProducts);
+router.get("/:id", protectRoute, getProductById);
 router.patch("/:id", protectRoute, adminRoute, toggleFeaturedProduct);
 router.delete("/:id", protectRoute, adminRoute, deleteProduct);
 

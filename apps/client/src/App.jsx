@@ -19,13 +19,13 @@ const CategoryPage = lazy(() => import("./pages/CategoryPage"));
 const CartPage = lazy(() => import("./pages/CartPage"));
 const PurchaseSuccessPage = lazy(() => import("./pages/PurchaseSuccessPage"));
 const PurchaseCancelPage = lazy(() => import("./pages/PurchaseCancelPage"));
-const ProductPage = lazy(() => import("./pages/ProductPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"))
 const SellerHomePage = lazy(() => import("./pages/SellerHomePage"));
 const SellerCreateProductsPage = lazy(
   () => import("./pages/SellerCreateProductsPage"),
 );
 const SellerProductsPage = lazy(() => import("./pages/SellerProductsPage"));
-const SellerProductPage = lazy(() => import("./pages/SellerProductPage"));
+
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 import ProtectedRoute from "./routes/ProtectedRoutes";
@@ -149,16 +149,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="seller/product/:id"
-              element={
-                <ProtectedRoute>
-                  <SellerOnlyRoutes>
-                    <SellerProductPage />
-                  </SellerOnlyRoutes>
-                </ProtectedRoute>
-              }
-            />
+           
             // buyer route
             <Route
               path="/category/:category"
@@ -204,9 +195,9 @@ const App = () => {
               path="/product/:id"
               element={
                 <ProtectedRoute>
-                  <BuyerOnlyRoutes>
+                  
                     <ProductPage />
-                  </BuyerOnlyRoutes>
+                
                 </ProtectedRoute>
               }
             />

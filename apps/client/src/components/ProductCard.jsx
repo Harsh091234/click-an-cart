@@ -12,51 +12,59 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async() => {  await addToCart(product);};
   const handleClick = () => {
-    if(user.role === "seller") return navigate(`/seller/product/${product._id}`);
+    
     navigate(`/product/${product._id}`);
   }
 
   return (
-    <div className="bg-white rounded-xl w-full sm:w-[15rem] shadow-md p-2 flex flex-col items-center text-center hover:shadow-lg transition">
-      {/* Product Image */}
+    <div className="group w-full max-w-[270px] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      {/* Image */}
       <div
         onClick={handleClick}
-        className="cursor-pointer h-60 sm:h-40 w-full flex items-center justify-center bg-sky-50 rounded-lg overflow-hidden"
+        className="relative aspect-square cursor-pointer overflow-hidden bg-gray-100"
       >
         <img
           src={
-            product.image ||
-            "https://www.google.com/imgres?q=tshirt%20logo&imgurl=https%3A%2F%2Fimg.freepik.com%2Fpremium-vector%2Ft-shirt-design-template_135595-7391.jpg%3Fsemt%3Dais_hybrid%26w%3D740%26q%3D80&imgrefurl=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Ft-shirt-outline%2F60&docid=JMtpq5HhLJ3xHM&tbnid=OhRzX39Es-WE6M&vet=12ahUKEwjejvyfo6qUAxVQSmwGHaudLXUQnPAOegQIIBAA..i&w=740&h=740&hcb=2&ved=2ahUKEwjejvyfo6qUAxVQSmwGHaudLXUQnPAOegQIIBAA"
+            product?.images?.[0] ||
+            "https://via.placeholder.com/500x500?text=No+Image"
           }
           alt={product.name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
         />
       </div>
 
-      {/* Product Info */}
-      <p className="mt-3 text-lg font-semibold text-gray-800">{product.name}</p>
-      <span className="text-sky-500 font-bold text-xl ">${product.price}</span>
+      {/* Content */}
+      <div className="flex flex-col gap-3 p-5">
+        <div>
+          <h2 className="line-clamp-2 text-lg font-semibold leading-6 text-gray-800">
+            {product.name}
+          </h2>
 
-      {/* Add to Cart Button */}
-      {user.role !== "seller" && (
-        <button
-          onClick={handleAddToCart}
-          disabled={loading}
-          className="mt-2 flex text-sm items-center gap-1.5 bg-sky-500 text-white px-3 py-2 rounded-lg hover:bg-sky-600 transition disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Adding...
-            </>
-          ) : (
-            <>
-              <ShoppingCart className="w-5 h-5" />
-              Add to cart
-            </>
-          )}
-        </button>
-      )}
+          <p className="mt-2 text-2xl font-bold text-sky-600">
+            ${product.price}
+          </p>
+        </div>
+
+        {user.role !== "seller" && (
+          <button
+            onClick={handleAddToCart}
+            disabled={loading}
+            className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-sky-500 py-3 font-medium text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-5 w-5" />
+                Add to Cart
+              </>
+            )}
+          </button>
+        )}
+      </div>
     </div>
   );
 };
