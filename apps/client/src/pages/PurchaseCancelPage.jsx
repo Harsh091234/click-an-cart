@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const PurchaseCancelPage = () => {
   return (
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="h-full flex p-4 sm:p-0 flex-col justify-center items-center">
       {/* Cancel Icon */}
       <CircleX className="text-red-500 h-20 w-20 mb-2" />
 

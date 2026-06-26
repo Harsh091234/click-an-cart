@@ -30,9 +30,7 @@ const ProductPage = () => {
     fetchProductById(id);
   }, [id, fetchProductById, editProduct]);
 
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
+ 
 
   if (!product) {
     return <div>Product not found</div>;

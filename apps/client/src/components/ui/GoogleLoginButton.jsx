@@ -1,6 +1,6 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useUserStore } from "../../../store/useUserStore";
+import { useUserStore } from "../../store/useUserStore";
 import { useNavigate } from "react-router-dom";
 const GoogleLoginButton = ({ styles, imageStyles, textStyles }) => {
   const navigate = useNavigate();

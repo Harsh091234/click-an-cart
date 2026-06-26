@@ -17,7 +17,7 @@ const ProfilePage = () => {
   const { user } = useUserStore();
 
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-  console.log(user);
+  
   //  const user = {
   //    name: "Harsh Sharma",
   //    email: "harsh@example.com",
@@ -26,7 +26,7 @@ const ProfilePage = () => {
   //  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
+    <div className="min-h-screen overflow-y-auto bg-gray-100 flex justify-center items-center p-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Cover */}
         <div className="h-32 bg-sky-500">

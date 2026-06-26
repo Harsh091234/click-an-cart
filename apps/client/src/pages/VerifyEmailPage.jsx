@@ -96,7 +96,7 @@ const VerifyEmailPage = () => {
             Enter the code below
           </p>
 
-          <div className="mt-5  flex justify-center gap-3">
+          <div className="mt-5  flex justify-center gap-2 sm:min-[370px]:gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <input
                 key={i}
@@ -137,7 +137,7 @@ const VerifyEmailPage = () => {
                     }
                   }
                 }}
-                className={`h-12 w-12 rounded-xl border text-center text-xl font-bold outline-none transition-all ${
+                className={`h-9 w-9  min-[370px]:h-12 min-[370px]:w-12 rounded-xl border text-center text-xl font-bold outline-none transition-all ${
                   errors.code
                     ? "border-red-500 ring-2 ring-red-200"
                     : "border-gray-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200"

@@ -10,7 +10,7 @@ const CartItem = ({ item, onDelete, onIncrement, onDecrement }) => {
       {/* Product Image */}
       <div className="w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-sky-50 flex items-center justify-center">
         <img
-          src={item.image}
+          src={item?.images[0]}
           alt={item.name}
           className="w-full h-full object-cover"
         />
@@ -19,7 +19,7 @@ const CartItem = ({ item, onDelete, onIncrement, onDecrement }) => {
    <div className="flex w-full  justify-between " >
      <div className="flex flex-col ml-2 ">
         <h1 className="text-lg font-semibold text-sky-600">{item.name}</h1>
-        <p className="text-gray-500 text-sm">{item.description}</p>
+        <p className="text-gray-500 text-sm wrap-anywhere">{item.description}</p>
         <button
           onClick={() => removeFromCart(item._id)}
           className="flex items-center gap-1 text-red-500 hover:text-red-600 mt-2"

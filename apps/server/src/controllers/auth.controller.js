@@ -380,7 +380,7 @@ export const setPassword = async (req, res) => {
     const { password } = req.body;
 
     const user = await User.findById(_id);
-    console.log("user: ", user);
+  
     if (!user) {
       return res
         .status(404)
@@ -455,7 +455,7 @@ export const editProfile = async (req, res) => {
     const { email, name, location, phone } = req.body;
 
     const avatar = req.file?.path;
-    console.log("langs", req.body);
+  
 
     const user = await User.findOne({ email }).select("-password");
 

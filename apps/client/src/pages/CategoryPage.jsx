@@ -17,7 +17,7 @@ const CategoryPage = () => {
       </h1>
 
       {/* Products Grid */}
-      <div className="flex flex-wrap flex-col sm:flex-row  justify-center sm:justify-start gap-6 ">
+      <div className="flex flex-wrap flex-col sm:flex-row  items-center sm:items-start sm:justify-start gap-6 ">
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard key={product._id} product={product} />

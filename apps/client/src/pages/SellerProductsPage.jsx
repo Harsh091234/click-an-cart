@@ -24,7 +24,7 @@ const SellerProductsPage = () => {
       )}
 
       {/* Products Grid */}
-      <div className="flex flex-wrap gap-6">
+      <div className="flex justify-center sm:justify-start flex-wrap gap-6">
         {sellerProducts?.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
