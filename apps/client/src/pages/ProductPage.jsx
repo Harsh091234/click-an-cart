@@ -8,26 +8,27 @@ import { changeImage } from "../utils/changeImageAnimation";
  import { Pencil } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import CustomBtn from "../components/ui/CustomBtn";
+import EditProductModal from "../components/modals/EditProductModal";
 
 const ProductPage = () => {
-  const { product, fetchProductById } = useProductStore();
+  const { product, fetchProductById, editProduct } = useProductStore();
   const [loading, setLoading] = useState(false);
   const { user } = useUserStore();
   const { id } = useParams();
   const { addToCart } = useCartStore();
-  
+  const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const images = product?.images;
-
+  const isAuthor = product?.author === user?._id;
   const [currentImage, setCurrentImage] = useState(0);
   const imageRef = useRef(null);
 
   const handleAddToCart = async () => {
     await addToCart(product);
   };
-  const handleEditProduct = () => {}
+ const handleSubmit = () =>{}
   useEffect(() => {
     fetchProductById(id);
-  }, [id, fetchProductById]);
+  }, [id, fetchProductById, editProduct]);
 
   useEffect(() => {
     console.log(product);
@@ -112,13 +113,16 @@ const ProductPage = () => {
         <p className="text-xs  md:text-sm text-gray-500">
           In Stock: {product.stock}
         </p>
-       
-        <CustomBtn 
-          text={"Edit Product"}
-        Icon={Pencil}
-        iconClassName="h-4 w-4"
-        className="mt-3"
-        />
+        {user.role === "seller" && isAuthor && (
+          <CustomBtn
+            onClick={() => setIsEditProductModalOpen(true)}
+            text={"Edit Product"}
+            Icon={Pencil}
+            iconClassName="h-4 w-4"
+            className="mt-3"
+          />
+        )}
+
         {/* Add to Cart Button */}
         {user.role !== "seller" && (
           <button
@@ -140,6 +144,12 @@ const ProductPage = () => {
           </button>
         )}
       </div>
+
+      <EditProductModal
+        open={isEditProductModalOpen}
+        onSubmit={handleSubmit}
+        onClose={() => setIsEditProductModalOpen(false)}
+      />
     </div>
   );
 };

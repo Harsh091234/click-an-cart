@@ -10,18 +10,10 @@ import  {useAnimatedFormErrors} from "../hooks/UseAnimatedFormErrors"
 import Input from "../components/Input"
 import FormError from "../components/FormError"
 import ProductImagesModal from "./modals/ProductImagesModal";
-const categories = [
-  "jeans",
-  "t-shirts",
-  "shoes",
-  "glasses",
-  "jackets",
-  "suits",
-  "bags",
-];
+import {categories} from "../constants/index"
 
 const CreateProductsForm = () => {
-  const { loading, uploading, createProducts, createSellerProduct } =
+  const { loading,  createProducts, createSellerProduct } =
     useProductStore();
   const { user } = useUserStore();
   const [images, setImages] = useState([]);
@@ -72,10 +64,10 @@ const CreateProductsForm = () => {
       success = await createProducts(formData);
     }
 
-    if (success) {reset();
-    setImages([]);
-    setUploadStatus("");
-    setError(""); }
+      if (success) {reset();
+      setImages([]);
+      setUploadStatus("");
+      setError(""); }
   };
 
   const handleDone = () => {

@@ -6,7 +6,7 @@ const SellerOnlyRoutes = ({children}) => {
   const { user} = useUserStore();
 
    
- if(user.role !== "seller") return <Navigate to={"/"} replace />
+ if(user.role !== "seller" ) return <Navigate to={"/"} replace />
 
   return children;
 }

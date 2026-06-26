@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useProductStore } from "../store/useProductStore";
-import { Trash2, Star, ImageOff } from "lucide-react";
+import { Trash2, Star, ImageOff, Loader, Pencil } from "lucide-react";
 import ProductsListSkeleton from "./skeletons/ProductsListSkeleton";
+import EditProductModal from "./modals/EditProductModal";
+import AdminEditProductModal from "./modals/AdminEditProductModal";
 
 const ProductsList = () => {
-  const { fetchAllProducts, products, deleteProduct, toggleFeatureProduct } =
+  const { fetchAllProducts,  products, deleteProduct,deletingProductId, loading, toggleFeatureProduct } =
     useProductStore();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [activeProduct, setActiveProduct] = useState(null) 
   const [showSkeleton, setShowSkeleton] = useState(true);
-
+const handleEdit = (product) => {
+  
+  setActiveProduct(product);
+  setModalOpen(true)
+}
+  
   useEffect(() => {
     fetchAllProducts();
     // force skeleton for at least 1.5s
@@ -31,9 +40,9 @@ const ProductsList = () => {
             {/* Top part: Image + info */}
             <div className="flex gap-3">
               <div className="flex-shrink-0 h-20 w-20 flex items-center justify-center rounded-lg bg-sky-200 overflow-hidden">
-                {p.image ? (
+                {p.images ? (
                   <img
-                    src={p.image}
+                    src={p.images[0]}
                     alt={p.name}
                     className="h-full w-full object-cover"
                   />
@@ -68,10 +77,20 @@ const ProductsList = () => {
                 <Star className="w-5 h-5" />
               </button>
               <button
+                onClick={() => handleEdit(p)}
+                className="p-2 rounded-full text-blue-600 hover:text-blue-700 transition"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button
                 onClick={() => deleteProduct(p._id)}
                 className="text-red-500 hover:text-red-600"
               >
-                <Trash2 className="w-5 h-5" />
+                {deletingProductId === p._id ? (
+                  <Loader className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -105,9 +124,9 @@ const ProductsList = () => {
               >
                 <td className="px-4 py-2 flex items-center gap-2">
                   <div className="h-8 w-8 flex items-center justify-center rounded-full bg-sky-200 overflow-hidden">
-                    {p.image ? (
+                    {p.images ? (
                       <img
-                        src={p.image}
+                        src={p.images[0]}
                         alt={p.name}
                         className="h-full w-full object-cover"
                       />
@@ -134,6 +153,12 @@ const ProductsList = () => {
                 </td>
                 <td className="px-4 py-2">
                   <button
+                    onClick={() => handleEdit(p)}
+                    className="p-2 rounded-full text-blue-500 hover:text-blue-600 transition"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
                     onClick={() => deleteProduct(p._id)}
                     className="p-2 rounded-full text-red-500 hover:text-red-600 transition"
                   >
@@ -156,6 +181,11 @@ const ProductsList = () => {
           </tbody>
         </table>
       </div>
+      <AdminEditProductModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        product={activeProduct}
+      />
     </div>
   );
 };

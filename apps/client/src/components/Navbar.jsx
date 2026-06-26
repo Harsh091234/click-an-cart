@@ -178,6 +178,14 @@ const Navbar = () => {
                   </Link> */}
                 </div>
               )}
+              <Link
+                to="/profile"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-2 rounded-lg active:bg-gray-200 transition"
+              >
+               
+                <span>Profile</span>
+              </Link>
 
               <button
                 onClick={handleLogout}
