@@ -44,11 +44,11 @@ export const getfeaturedProducts = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
+  
   try {
     const { name, description, price, category, stock } = req.body;
 
     const images = req.files;
-    console.log("hi", images);
 
     if (images.length === 0)
       return res
@@ -81,29 +81,41 @@ export const createProduct = async (req, res) => {
     });
   }
 };
-
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
+
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
-    if (product.image) {
-      const publicId = product.image.split("/").pop().split(".")[0]; //makes https://res.cloudinary.com/demo/image/upload/v1692795478/products/mybag123.jpg => mybag123
 
-      try {
-        await cloudinary.uploader.destroy("/").pop().split(".")[0];
-      } catch (error) {
-        console.log("error deleting image from cloudinary", error);
+    // Delete images from Cloudinary
+    if (product.images?.length) {
+      for (const image of product.images) {
+        const publicId = image.split("/").pop().split(".")[0];
+
+        try {
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.error("Error deleting image:", err);
+        }
       }
-
-      await Product.findByIdAndDelete(req.params.id);
-
-      res.json({ message: "Product deleted successfully" });
     }
+
+    await Product.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
   } catch (error) {
-    console.error("Error in deleteProduct controller:", error);
-    res.status(500).json({
+    console.error("Error in deleteProduct:", error);
+
+    return res.status(500).json({
+      success: false,
       message: "Error deleting product",
       error: error.message,
     });
@@ -154,9 +166,94 @@ export const showSellerProducts = async (req, res) => {
   }
 };
 
+export const editProduct = async (req, res) => {
+  console.log("editProduct called", new Date().toISOString());
+  try {
+    const { name, description, price, category, stock } = req.body;
+    const removedImages = JSON.parse(req.body.removedImages || "[]");
+    console.log("remove images", removedImages);
+    const { id } = req.params;
+    const images = req.files ?? [];
+    console.log("images", images, req.files.length);
+
+    const hasUpdates =
+      name !== undefined ||
+      description !== undefined ||
+      price !== undefined ||
+      category !== undefined ||
+      stock !== undefined ||
+      images.length > 0 ||
+      removedImages.length > 0;
+
+    if (!hasUpdates) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one field is required to update.",
+      });
+    }
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    if (removedImages.length) {
+      product.images = product.images.filter(
+        (img) => !removedImages.includes(img),
+      );
+    }
+
+    const uploadedImages = await Promise.all(
+      images.map(async (image) => {
+        const uploaded = await uploadOnCloudinary(image.path);
+        return uploaded.secure_url;
+      }),
+    );
+   
+
+    if (name !== undefined) {
+      product.name = name;
+    }
+
+    if (description !== undefined) {
+      product.description = description;
+    }
+
+    if (price !== undefined) {
+      product.price = price;
+    }
+
+    if (category !== undefined) {
+      product.category = category;
+    }
+
+    if (stock !== undefined) {
+      product.stock = stock;
+    }
+
+    if (uploadedImages.length) {
+      product.images.push(...uploadedImages);
+    }
+
+    await product.save();
+    console.log("product", product);
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error in editProduct controller:", error);
+    res.status(500).json({
+      message: "Error editing product",
+      error: error.message,
+    });
+  }
+};
+
 export const getProductById = async (req, res) => {
   try {
-    console.log("hello");
     if (!req.params.id) return;
     const product = await Product.findById(req.params.id);
     if (!product) {
