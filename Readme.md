@@ -43,24 +43,24 @@ A full-stack ecommerce app for clothing with authentication, cart, coupons, secu
 
 
 ## Screenshots
-![Screenshot 1](/client/public/Screenshots/s1.png)
-![Screenshot 2](/client/public/Screenshots/s2.png)
-![Screenshot 3](/client/public/Screenshots/s3.png)
-![Screenshot 4](/client/public/Screenshots/s4.png)
-![Screenshot 5](/client/public/Screenshots/s5.png)
-![Screenshot 6](/client/public/Screenshots/s6.png)
-![Screenshot 7](/client/public/Screenshots/s7.png)
-![Screenshot 8](/client/public/Screenshots/s8.png)
-![Screenshot 9](/client/public/Screenshots/s9.png)
-![Screenshot 10](/client/public/Screenshots/s10.png)
-![Screenshot 11](/client/public/Screenshots/s11.png)
+![Screenshot 1](/apps/client/public/Screenshots/s1.png)
+![Screenshot 2](/apps/client/public/Screenshots/s2.png)
+![Screenshot 3](/apps/client/public/Screenshots/s3.png)
+![Screenshot 4](/apps/client/public/Screenshots/s4.png)
+![Screenshot 5](/apps/client/public/Screenshots/s5.png)
+![Screenshot 6](/apps/client/public/Screenshots/s6.png)
+![Screenshot 7](/apps/client/public/Screenshots/s7.png)
+![Screenshot 8](/apps/client/public/Screenshots/s8.png)
+![Screenshot 9](/apps/client/public/Screenshots/s9.png)
+![Screenshot 10](/apps/client/public/Screenshots/s10.png)
+![Screenshot 11](/apps/client/public/Screenshots/s11.png)
 
 ## 🚀 Getting Started
 
 
 ### Prerequisites
 - Node.js (version specified in package.json)
-- npm 
+- pnpm 
 - MongoDB database (local or cloud)
 
 ### Installation
@@ -73,14 +73,14 @@ A full-stack ecommerce app for clothing with authentication, cart, coupons, secu
 
 2. **Build project**
    ```bash
-    npm run build
+    pnpm  build
    ```
 
 
    ### 🔧 Environment Variables Setup
 
    #### Server (.env)
-Create a `.env` file in the `server` directory:
+Create a `.env` file in the `apps/server` directory:
 ```env
 PORT=5000
 MONGO_URI=mongodb+srv://<your_username>:<your_password>@cluster0.mongodb.net/ecommerce
@@ -107,9 +107,9 @@ NODE_ENV=development
 ```
 
 #### Client (.env)
-Create a `.env` file in the `client` directory:
+Create a `.env` file in the `apps/client` directory:
 ```env
-MODE=development
+VITE_MODE=development
 ```
 
 ### 🚀 Running the Application
@@ -118,14 +118,14 @@ MODE=development
 
 1. **Start the Backend Server**
    ```bash
-   cd server
-   npm run dev
+   cd apps/server
+   pnpm  dev
    ```
 
 2. **Start the Frontend Development Server**
    ```bash
-   cd client
-   npm run dev
+   cd apps/client
+   pnpm dev
    ```
 
 3. **Access the Application**

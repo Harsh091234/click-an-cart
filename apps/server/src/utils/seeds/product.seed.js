@@ -4,104 +4,88 @@ import User from "../../models/user.model.js";
 import Product from "../../models/product.model.js";
 
 dotenv.config();
-
 const sampleProducts = [
   {
-    name: "iPhone 15 Pro",
-    description: "Latest Apple smartphone with A17 Pro chip.",
-    price: "129999",
-    stock: "25",
-    category: "Mobiles",
+    name: "Levi's 511 Slim Jeans",
+    description: "Comfortable slim-fit denim jeans.",
+    price: "3499",
+    stock: "30",
+    category: "jeans",
   },
   {
-    name: "Samsung Galaxy S24 Ultra",
-    description: "Premium Android flagship with S Pen.",
-    price: "119999",
-    stock: "18",
-    category: "Mobiles",
+    name: "Nike Sports T-Shirt",
+    description: "Breathable cotton sports t-shirt.",
+    price: "1499",
+    stock: "50",
+    category: "t-shirts",
   },
   {
-    name: "MacBook Air M3",
-    description: "Lightweight laptop powered by Apple M3.",
-    price: "149999",
-    stock: "10",
-    category: "Laptops",
-  },
-  {
-    name: "Dell XPS 15",
-    description: "High-performance Windows laptop.",
-    price: "165000",
-    stock: "12",
-    category: "Laptops",
-  },
-  {
-    name: "Sony WH-1000XM5",
-    description: "Industry-leading noise cancelling headphones.",
-    price: "29999",
-    stock: "40",
-    category: "Audio",
-  },
-  {
-    name: "Apple Watch Series 10",
-    description: "Advanced smartwatch with health tracking.",
-    price: "45999",
-    stock: "22",
-    category: "Wearables",
-  },
-  {
-    name: "Nike Air Max",
-    description: "Comfortable everyday running shoes.",
-    price: "8999",
-    stock: "60",
-    category: "Footwear",
-  },
-  {
-    name: "Logitech MX Master 3S",
-    description: "Premium wireless productivity mouse.",
+    name: "Adidas Ultraboost",
+    description: "Premium running shoes with responsive cushioning.",
     price: "9999",
-    stock: "45",
-    category: "Accessories",
+    stock: "20",
+    category: "shoes",
   },
   {
-    name: "Mechanical Keyboard",
-    description: "RGB mechanical keyboard with blue switches.",
-    price: "5999",
+    name: "Ray-Ban Aviator",
+    description: "Classic polarized aviator sunglasses.",
+    price: "7999",
+    stock: "15",
+    category: "glasses",
+  },
+  {
+    name: "Zara Denim Jacket",
+    description: "Stylish blue denim jacket for casual wear.",
+    price: "4999",
+    stock: "18",
+    category: "jackets",
+  },
+  {
+    name: "Allen Solly Formal Suit",
+    description: "Elegant slim-fit two-piece formal suit.",
+    price: "12999",
+    stock: "10",
+    category: "suits",
+  },
+  {
+    name: "Wildcraft Backpack",
+    description: "Durable backpack with multiple compartments.",
+    price: "2499",
     stock: "35",
-    category: "Accessories",
+    category: "bags",
   },
   {
-    name: "Canon EOS R10",
-    description: "Mirrorless camera for creators.",
-    price: "79999",
-    stock: "8",
-    category: "Camera",
+    name: "Pepe Jeans Regular Fit",
+    description: "Classic everyday blue jeans.",
+    price: "2999",
+    stock: "28",
+    category: "jeans",
+  },
+  {
+    name: "Puma Graphic T-Shirt",
+    description: "Soft cotton graphic tee for everyday wear.",
+    price: "1299",
+    stock: "40",
+    category: "t-shirts",
+  },
+  {
+    name: "Fossil Leather Messenger Bag",
+    description: "Premium leather office messenger bag.",
+    price: "6999",
+    stock: "12",
+    category: "bags",
   },
 ];
 
-const imagePool = [
-  "https://picsum.photos/600/600?random=1",
-  "https://picsum.photos/600/600?random=2",
-  "https://picsum.photos/600/600?random=3",
-  "https://picsum.photos/600/600?random=4",
-  "https://picsum.photos/600/600?random=5",
-  "https://picsum.photos/600/600?random=6",
-  "https://picsum.photos/600/600?random=7",
-  "https://picsum.photos/600/600?random=8",
-  "https://picsum.photos/600/600?random=9",
-  "https://picsum.photos/600/600?random=10",
-  "https://picsum.photos/600/600?random=11",
-  "https://picsum.photos/600/600?random=12",
-  "https://picsum.photos/600/600?random=13",
-  "https://picsum.photos/600/600?random=14",
-  "https://picsum.photos/600/600?random=15",
-];
 
-const getRandomImages = () => {
-  const count = Math.floor(Math.random() * 3) + 2; // 2-4 images
-
-  const shuffled = [...imagePool].sort(() => 0.5 - Math.random());
-
-  return shuffled.slice(0, count);
+const imagePool = {
+  jeans: "https://source.unsplash.com/600x600/?jeans",
+  "t-shirts": "https://source.unsplash.com/600x600/?tshirt",
+  shoes: "https://source.unsplash.com/600x600/?shoes",
+  glasses: "https://source.unsplash.com/600x600/?sunglasses",
+  jackets: "https://source.unsplash.com/600x600/?jacket",
+  suits: "https://source.unsplash.com/600x600/?suit",
+  bags: "https://source.unsplash.com/600x600/?bag",
 };
 
 const seedProducts = async () => {
@@ -119,7 +103,7 @@ const seedProducts = async () => {
 
     const products = sampleProducts.map((product, index) => ({
       ...product,
-      images: getRandomImages(),
+      images: [imagePool[product.category]],
       isFeatured: index < 3,
       author: users[Math.floor(Math.random() * users.length)]._id,
     }));
