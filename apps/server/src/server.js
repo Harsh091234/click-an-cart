@@ -12,7 +12,7 @@ import cartRoutes from "./routes/cart.route.js"
 import couponRoutes from "./routes/coupons.route.js"
 import paymentRoutes from "./routes/payment.route.js"
 import analyticsRoutes from "./routes/analytics.route.js"
-
+import healthRoutes from "./routes/health.route.js"
 
 dotenv.config();
 
@@ -40,6 +40,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use('/api/analytics', analyticsRoutes)
+app.use("/api/health",healthRoutes)
 
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);

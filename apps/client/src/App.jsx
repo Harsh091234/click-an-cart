@@ -33,28 +33,45 @@ import PublicOnlyRoutes from "./routes/PublicOnlyRoutes";
 import SellerOnlyRoutes from "./routes/SellerOnlyRoutes";
 import BuyerOnlyRoutes from "./routes/BuyerOnlyRoutes";
 import AdminOnlyRoutes from "./routes/AdminOnlyRoutes";
+import { useServerHealth } from "./hooks/useServerHealth";
+import ServerLoading from "./components/ui/ServerLoading";
+import ServerUnavailable from "./components/ServerUnavailable";
 
 const App = () => {
+  const { serverReady, timedOut } = useServerHealth();
+   
   const { user, checkAuth, checkingAuth } = useUserStore();
 
   const { getCartItems } = useCartStore();
 
+ 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (serverReady) {
+      checkAuth();
+    }
+  }, [serverReady, checkAuth]);
 
   useEffect(() => {
-    if (!user) return;
+    if (serverReady && user) {
+      getCartItems();
+    }
+  }, [serverReady, user, getCartItems]);
 
-    getCartItems();
-  }, [getCartItems, user]);
-  if (checkingAuth)
+  if (timedOut) {
+    return <ServerUnavailable />;
+  }
+
+  if (!serverReady) {
+    return <ServerLoading />;
+  }
+
+  if (checkingAuth) {
     return (
       <div className="h-screen">
-        {" "}
         <LoadingUi />
       </div>
     );
+  }
   return (
     <div className="h-screen bg-base-300  text-black relative  flex flex-col">
       <div className="relative z-50 h-full flex flex-col overflow-hidden">
