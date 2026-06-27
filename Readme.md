@@ -2,7 +2,7 @@
 A full-stack ecommerce app for clothing with authentication, cart, coupons, secure checkout, and admin controls for products and orders.
 
 ## 🚀 Live Preview
-**Site Url:** [https://click-an-cart.onrender.com](https://click-an-cart.onrender.com)
+**Site Url:** [https://click-an-cart-client-harsh-sharmas-projects-2fa7f792.vercel.app/](https://click-an-cart-client-harsh-sharmas-projects-2fa7f792.vercel.app/)
 
 ##  ✨ Features
 
