@@ -5,7 +5,6 @@ const HEALTH_URL = `${import.meta.env.VITE_BASE_URI}/health`;
 const MAX_WAIT_TIME = parseInt(import.meta.env.VITE_SERVER_WAIT_TIME); // 60 seconds
 
 export const useServerHealth = () => {
-    console.log(MAX_WAIT_TIME)
   const [serverReady, setServerReady] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
 
@@ -22,7 +21,7 @@ export const useServerHealth = () => {
       }
 
       try {
-        await axios.get(HEALTH_URL, {
+        await axios.get(HEALTH_URL, { 
           timeout: 3000,
         });
 

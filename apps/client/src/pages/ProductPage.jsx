@@ -62,7 +62,10 @@ const ProductPage = () => {
                 )
               }
               className={`text-gray-700  
-    absolute -left-12 top-1/2 -translate-y-1/2
+    absolute
+left-2 sm:-left-10 md:-left-12
+top-1/2
+-translate-y-1/2
     rounded-full 
     ${currentImage === 0 ? "opacity-40 cursor-not-allowed" : "hover:scale-110 "}
   `}
@@ -82,7 +85,9 @@ const ProductPage = () => {
                 )
               }
               className={`text-gray-700
-    absolute -right-12 top-1/2 -translate-y-1/2
+    absolute right-2 sm:-right-10 md:-right-12
+top-1/2
+-translate-y-1/2
     
     ${
       currentImage === images.length - 1
