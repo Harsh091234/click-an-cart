@@ -117,7 +117,7 @@ const CreateProductsForm = () => {
   });
 
   return (
-    <div className="w-full sm:max-w-xl mx-auto bg-white shadow rounded-xl border border-gray-200 py-9 px-12 h-full ">
+    <div className="w-full sm:max-w-xl mx-auto bg-white shadow rounded-xl border border-gray-200 py-9 px-5 sm:px-12 h-full ">
       <h1 className="text-[1.77rem] font-semibold text-sky-500 mb-6 text-center">
         Create New Product
       </h1>

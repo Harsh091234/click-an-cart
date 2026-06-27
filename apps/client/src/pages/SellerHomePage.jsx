@@ -17,7 +17,7 @@ const SellerHomePage = () => {
   return (
     <div className="h-full px-3 py-3 overflow-y-auto w-full scrollbar-hide">
       {/* Two Box Divs */}
-      <div className="flex  flex-col justify-center sm:flex-row gap-3 sm:gap-6 mt-3 sm:mt-6">
+      <div className="flex  px-3 flex-col justify-center sm:flex-row gap-4 sm:gap-6 mt-5 sm:mt-6">
         {/* Create Product Box */}
         {/* Create Product Box */}
         <Link

@@ -5,14 +5,14 @@ import { useCartStore } from "../store/useCartStore";
 import { Loader2, ShoppingCart } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { changeImage } from "../utils/changeImageAnimation";
- import { Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import CustomBtn from "../components/ui/CustomBtn";
 import EditProductModal from "../components/modals/EditProductModal";
 
 const ProductPage = () => {
-  const { product, fetchProductById, editProduct } = useProductStore();
-  const [loading, setLoading] = useState(false);
+  const { product, loading, fetchProductById, editProduct } = useProductStore();
+
   const { user } = useUserStore();
   const { id } = useParams();
   const { addToCart } = useCartStore();
@@ -25,15 +25,40 @@ const ProductPage = () => {
   const handleAddToCart = async () => {
     await addToCart(product);
   };
- const handleSubmit = () =>{}
+  const handleSubmit = () => {};
   useEffect(() => {
     fetchProductById(id);
   }, [id, fetchProductById, editProduct]);
 
- 
-
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-sky-200 border-t-sky-500" />
+      </div>
+    );
+  }
   if (!product) {
-    return <div>Product not found</div>;
+    return (
+      <div className="flex h-screen items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Product not found
+          </h2>
+
+          <p className="mt-2 text-sm text-gray-500">
+            The product you are looking for doesn’t exist or may have been
+            removed.
+          </p>
+
+          <button
+            onClick={() => window.history.back()}
+            className="mt-6 inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-2 text-white text-sm font-medium transition hover:bg-sky-600 active:scale-95"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="h-full flex flex-col items-center justify-center  p-2 sm:p-6 ">
